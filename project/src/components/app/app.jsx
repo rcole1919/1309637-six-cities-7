@@ -7,6 +7,7 @@ import Favorites from '../favorites/favorites';
 import Room from '../room/room';
 import NotFound from '../not-found/not-found';
 import {AppRoute} from '../../const';
+import {Offers} from '../../prop-types';
 
 function App({cards, placesCount}) {
   return (
@@ -19,9 +20,9 @@ function App({cards, placesCount}) {
           <SignIn />
         </Route>
         <Route exact path={AppRoute.FAVORITES}>
-          <Favorites />
+          <Favorites cards={cards} />
         </Route>
-        <Route exact path={AppRoute.ROOM_DEV}>
+        <Route exact path={AppRoute.ROOM}>
           <Room />
         </Route>
         <Route>
@@ -33,12 +34,7 @@ function App({cards, placesCount}) {
 }
 
 App.propTypes = {
-  cards: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    }),
-  ),
+  cards: Offers,
   placesCount :PropTypes.number.isRequired,
 };
 

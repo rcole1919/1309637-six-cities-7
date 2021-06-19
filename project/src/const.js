@@ -8,6 +8,8 @@ export const AppRoute = {
   ROOM_DEV: '/offer',
 };
 
+export const DEFAULT_ICON_URL = 'img/pin.svg';
+
 export const CardType = {
   MAIN: 'main',
   FAVORITES: 'favorites',

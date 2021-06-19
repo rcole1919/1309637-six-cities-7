@@ -8,6 +8,7 @@ import Room from '../room/room';
 import NotFound from '../not-found/not-found';
 import {AppRoute} from '../../const';
 import {Offers} from '../../prop-types';
+import {OFFERS} from '../../mock/offers';
 
 function App({cards, placesCount}) {
   return (
@@ -23,7 +24,7 @@ function App({cards, placesCount}) {
           <Favorites cards={cards} />
         </Route>
         <Route exact path={AppRoute.ROOM}>
-          <Room />
+          <Room offer={OFFERS[0]} />
         </Route>
         <Route>
           <NotFound />

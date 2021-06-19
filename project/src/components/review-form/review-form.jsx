@@ -47,6 +47,7 @@ function ReviewForm() {
         className="reviews__textarea form__textarea"
         id="review"
         name="review"
+        maxLength="50"
         placeholder="Tell how was your stay, what you like and what can be improved" defaultValue={''}
         onChange={handleFieldChange}
       />

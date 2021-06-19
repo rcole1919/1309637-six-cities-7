@@ -42,3 +42,20 @@ export const OfferItem = PropTypes.shape({
 export const Offers = PropTypes.arrayOf(
   OfferItem,
 );
+
+export const ReviewItem = PropTypes.shape({
+  comment: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  rating: PropTypes.number.isRequired,
+  user: PropTypes.shape({
+    avatarUrl: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    isPro: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+});
+
+export const Reviews = PropTypes.arrayOf(
+  ReviewItem,
+);

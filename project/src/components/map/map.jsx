@@ -1,16 +1,22 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import useMap from './useMap';
+import useMap from '../../hooks/useMap';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {DEFAULT_ICON_URL} from '../../const';
+import {DEFAULT_ICON_URL, ACTIVE_ICON_URL} from '../../const';
 
-function Map({city, points}) {
+function Map({city, points, className, mapHeight, selectedPoint}) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
   const defaultIcon = leaflet.icon({
     iconUrl: DEFAULT_ICON_URL,
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+  });
+
+  const activeIcon = leaflet.icon({
+    iconUrl: ACTIVE_ICON_URL,
     iconSize: [30, 30],
     iconAnchor: [15, 30],
   });
@@ -23,17 +29,19 @@ function Map({city, points}) {
             lat: point.latitude,
             lng: point.longitude,
           }, {
-            icon: defaultIcon,
+            icon: (point.name === selectedPoint.name)
+              ? activeIcon
+              : defaultIcon,
           })
           .addTo(map);
       });
     }
-  }, [map, points, defaultIcon]);
+  }, [map, points, defaultIcon, activeIcon, selectedPoint.name]);
 
   return (
     <section
-      className="cities__map map"
-      style={{height: '100%'}}
+      className={className}
+      style={{height: mapHeight}}
       ref={mapRef}
     />
   );
@@ -50,8 +58,17 @@ Map.propTypes = {
       latitude: PropTypes.number.isRequired,
       longitude: PropTypes.number.isRequired,
       zoom: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
     }),
   ),
+  selectedPoint: PropTypes.shape({
+    latitude: PropTypes.number,
+    longitude: PropTypes.number,
+    zoom: PropTypes.number,
+    name: PropTypes.string,
+  }),
+  className: PropTypes.string.isRequired,
+  mapHeight: PropTypes.string.isRequired,
 };
 
 export default Map;

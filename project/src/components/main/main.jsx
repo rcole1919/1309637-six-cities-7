@@ -1,13 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Header from '../header/header';
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
 import {Offers} from '../../prop-types';
-import {CardType} from '../../const';
+import {CardType, MapType} from '../../const';
 import {AMSTERDAM} from '../../mock/coord';
 
 function Main({cards, placesCount}) {
+  const [selectedPoint, setSelectedPoint] = useState({});
+
+  const points = cards.map((el) => ({...el.location, name: el.host.name}));
+
+  const onListItemHover = (listItemName) => {
+    const currentPoint = points.find((point) => point.name === listItemName);
+    setSelectedPoint(currentPoint);
+  };
   return (
     <div className="page page--gray page--main">
       <Header />
@@ -69,10 +77,16 @@ function Main({cards, placesCount}) {
                   <li className="places__option" tabIndex="0">Top rated first</li>
                 </ul>
               </form>
-              <CardList cards={cards} cardType={CardType.MAIN} />
+              <CardList onListItemHover={onListItemHover} cards={cards} cardType={CardType.MAIN} />
             </section>
             <div className="cities__right-section">
-              <Map city={AMSTERDAM} points={cards.map((el) => el.location)} />
+              <Map
+                mapHeight={MapType.MAIN.height}
+                className={MapType.MAIN.class}
+                city={AMSTERDAM}
+                points={points}
+                selectedPoint={selectedPoint}
+              />
             </div>
           </div>
         </div>

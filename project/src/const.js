@@ -10,7 +10,21 @@ export const AppRoute = {
 
 export const DEFAULT_ICON_URL = 'img/pin.svg';
 
+export const ACTIVE_ICON_URL = 'img/pin-active.svg';
+
 export const CardType = {
   MAIN: 'main',
   FAVORITES: 'favorites',
+  ROOM: 'room',
+};
+
+export const MapType = {
+  MAIN: {
+    class: 'cities__map map',
+    height: '100%',
+  },
+  ROOM: {
+    class: 'property__map map',
+    height: '579',
+  },
 };

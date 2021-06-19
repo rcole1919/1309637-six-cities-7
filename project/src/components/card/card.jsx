@@ -2,40 +2,57 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {OfferItem} from '../../prop-types';
-import {MAX_RATING, CardType, AppRoute} from '../../const';
+import {CardType, AppRoute} from '../../const';
+import {getRatingPercent} from '../../utils';
 
-function Card({card, cardType}) {
+function Card({card, cardType, onListItemHover}) {
   const {host: {name}, isPremium, previewImage, price, rating, type} = card;
 
   const [offer, setOffer] = useState({
     isActive: false,
     isFavorite: false,
   });
+  const {isFavorite} = offer;
+  const {isActive} = offer;
 
-  const premiumMark = isPremium && (
+
+  const premiumMark = cardType === CardType.MAIN && isPremium && (
     <div className="place-card__mark">
       <span>Premium</span>
     </div>
   );
 
-  const ratingWidth = `${Math.floor(rating) * 100 / MAX_RATING}%`;
-
-  const {isFavorite} = offer;
+  const getClassByType = (cardTypeValue) => {
+    switch (cardTypeValue) {
+      case CardType.MAIN:
+        return ['cities__place-card', 'cities__image-wrapper'];
+      case CardType.FAVORITES:
+        return ['cities__image-wrapper', 'favorites__image-wrapper'];
+      case CardType.ROOM:
+        return ['near-places__card', 'near-places__image-wrapper'];
+      default:
+        return ['', ''];
+    }
+  };
+  const [articleClass, wrapperClass] = getClassByType(cardType);
 
   return (
     <article
-      className={`${cardType === CardType.MAIN ? 'cities__place-card' : 'favorites__card'} place-card`}
-      onMouseEnter={() => setOffer({
-        ...offer,
-        isActive: true,
-      })}
+      className={`${articleClass} place-card`}
+      onMouseEnter={() => {
+        setOffer({
+          ...offer,
+          isActive: !isActive,
+        });
+        onListItemHover && onListItemHover(name);
+      }}
       onMouseLeave={() => setOffer({
         ...offer,
-        isActive: false,
+        isActive: !isActive,
       })}
     >
       {premiumMark}
-      <div className={`${cardType === CardType.MAIN ? 'cities__image-wrapper' : 'favorites__image-wrapper'} place-card__image-wrapper`}>
+      <div className={`${wrapperClass} place-card__image-wrapper`}>
         <a href="/#">
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
         </a>
@@ -61,7 +78,7 @@ function Card({card, cardType}) {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: ratingWidth}}></span>
+            <span style={{width: getRatingPercent(rating)}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
@@ -77,6 +94,7 @@ function Card({card, cardType}) {
 Card.propTypes = {
   card: OfferItem,
   cardType: PropTypes.string.isRequired,
+  onListItemHover: PropTypes.func,
 };
 
 export default Card;

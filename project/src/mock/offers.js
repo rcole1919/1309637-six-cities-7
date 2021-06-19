@@ -22,8 +22,8 @@ export const OFFERS = [
     isFavorite: false,
     isPremium: false,
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3909553943508,
+      longitude: 4.85309666406198,
       zoom: 7,
     },
     maxAdults: 4,
@@ -37,8 +37,8 @@ export const OFFERS = [
     bedrooms: 2,
     city: {
       location: {
-        latitude: 52.350216,
-        longitude: 4.885168,
+        latitude: 52.370216,
+        longitude: 4.895168,
         zoom: 10,
       },
       name: 'Amsterdam',
@@ -56,8 +56,8 @@ export const OFFERS = [
     isFavorite: true,
     isPremium: true,
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.369553943508,
+      longitude: 4.85309666406198,
       zoom: 8,
     },
     maxAdults: 2,
@@ -71,11 +71,11 @@ export const OFFERS = [
     bedrooms: 5,
     city: {
       location: {
-        latitude: 52.270216,
-        longitude: 4.695168,
+        latitude: 52.370216,
+        longitude: 4.895168,
         zoom: 5,
       },
-      name: 'Cologne',
+      name: 'Amsterdam',
     },
     description: 'A Berlin cozy and Berlin that hides Berlin a a Berlin by the unique lightness of Berlin.',
     goods: ['Berlin', 'Kitchen', 'Nice TV', 'Washing machine', 'Coffee apartment', 'Kitchen'],
@@ -90,8 +90,8 @@ export const OFFERS = [
     isFavorite: true,
     isPremium: false,
     location: {
-      latitude: 52.45514938496378,
-      longitude: 4.373877537499948,
+      latitude: 52.3909553943508,
+      longitude: 4.929309666406198,
       zoom: 9,
     },
     maxAdults: 3,
@@ -105,11 +105,11 @@ export const OFFERS = [
     bedrooms: 8,
     city: {
       location: {
-        latitude: 52.970216,
-        longitude: 4.295168,
+        latitude: 52.370216,
+        longitude: 4.895168,
         zoom: 10,
       },
-      name: 'Samara',
+      name: 'Amsterdam',
     },
     description: 'Samara quiet cozy and Samara that hides Samara a a river by the unique lightness of Amsterdam.',
     goods: ['Samara', 'Rating', 'Cable TV', 'Washing machine', 'Coffee Samara', 'Dishwasher'],
@@ -124,8 +124,8 @@ export const OFFERS = [
     isFavorite: false,
     isPremium: true,
     location: {
-      latitude: 52.45514938496378,
-      longitude: 4.273877537499948,
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
       zoom: 8,
     },
     maxAdults: 3,
@@ -136,3 +136,4 @@ export const OFFERS = [
     type: 'apartment',
   },
 ];
+

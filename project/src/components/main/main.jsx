@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../header/header';
 import CardList from '../card-list/card-list';
+import Map from '../map/map';
 import {Offers} from '../../prop-types';
 import {CardType} from '../../const';
+import {AMSTERDAM} from '../../mock/coord';
 
 function Main({cards, placesCount}) {
   return (
@@ -70,7 +72,7 @@ function Main({cards, placesCount}) {
               <CardList cards={cards} cardType={CardType.MAIN} />
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map city={AMSTERDAM} points={cards.map((el) => el.location)} />
             </div>
           </div>
         </div>

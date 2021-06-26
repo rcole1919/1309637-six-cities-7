@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import Header from '../header/header';
 import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
-import {OfferItem} from '../../prop-types';
+import {Offers} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
 import {REVIEWS} from '../../mock/reviews';
-import {AMSTERDAM} from '../../mock/coord';
 import {OFFERS} from '../../mock/offers';
 import {MapType, CardType} from '../../const';
 
-function Room({offer}) {
+function Room(props) {
+  const cardId = props.match.params.id;
+  const currentCard = props.cards.find((el) => el.id === cardId);
   const {
     images,
     isPremium,
@@ -22,16 +24,22 @@ function Room({offer}) {
     type,
     price,
     goods,
+    city,
     host: {avatarUrl, isPro, name},
     description,
-  } = offer;
+  } = currentCard;
+
   const [selectedPoint, setSelectedPoint] = useState({});
 
-  const points = OFFERS.map((el) => ({...el.location, name: el.host.name}));
+  const points = props.cards.map((el) => ({...el.location, name: el.host.name}));
 
   const onListItemHover = (listItemName) => {
-    const currentPoint = points.find((point) => point.name === listItemName);
-    setSelectedPoint(currentPoint);
+    if (listItemName) {
+      const currentPoint = points.find((point) => point.name === listItemName);
+      setSelectedPoint(currentPoint);
+      return;
+    }
+    setSelectedPoint({name: ''});
   };
 
   return (
@@ -134,7 +142,7 @@ function Room({offer}) {
           <Map
             mapHeight={MapType.ROOM.height}
             className={MapType.ROOM.class}
-            city={AMSTERDAM}
+            city={city.location}
             points={points}
             selectedPoint={selectedPoint}
           />
@@ -155,7 +163,12 @@ function Room({offer}) {
 }
 
 Room.propTypes = {
-  offer: OfferItem,
+  cards: Offers,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
+  }),
 };
 
 export default Room;

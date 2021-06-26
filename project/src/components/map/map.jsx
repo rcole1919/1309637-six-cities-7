@@ -7,6 +7,7 @@ import {DEFAULT_ICON_URL, ACTIVE_ICON_URL} from '../../const';
 
 function Map({city, points, className, mapHeight, selectedPoint}) {
   const mapRef = useRef(null);
+
   const map = useMap(mapRef, city);
 
   const defaultIcon = leaflet.icon({

@@ -9,7 +9,7 @@ function CityList({currentCity, onCityChange}) {
         CITIES.map((item) => (
           <li key={item} className="locations__item">
             <a
-              className={`locations__item-link tabs__item${item === currentCity && ' tabs__item--active'}`}
+              className={`locations__item-link tabs__item${item === currentCity ? ' tabs__item--active' : ''}`}
               href="/"
               onClick={(evt) => {
                 evt.preventDefault();

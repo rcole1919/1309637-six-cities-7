@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Header from '../header/header';
+import NotFound from '../not-found/not-found';
 import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
 import CardList from '../card-list/card-list';
@@ -12,8 +13,14 @@ import {OFFERS} from '../../mock/offers';
 import {MapType, CardType} from '../../const';
 
 function Room(props) {
+  const [selectedPoint, setSelectedPoint] = useState({});
   const cardId = props.match.params.id;
   const currentCard = props.cards.find((el) => el.id === cardId);
+  if (!currentCard) {
+    return (
+      <NotFound />
+    );
+  }
   const {
     images,
     isPremium,
@@ -28,8 +35,6 @@ function Room(props) {
     host: {avatarUrl, isPro, name},
     description,
   } = currentCard;
-
-  const [selectedPoint, setSelectedPoint] = useState({});
 
   const points = props.cards.map((el) => ({...el.location, name: el.host.name}));
 

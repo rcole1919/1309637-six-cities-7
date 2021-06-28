@@ -4,8 +4,7 @@ export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',
   FAVORITES: '/favorites',
-  ROOM: '/offer/:id',
-  ROOM_DEV: '/offer',
+  ROOM: '/offer',
 };
 
 export const DEFAULT_ICON_URL = 'img/pin.svg';
@@ -28,3 +27,12 @@ export const MapType = {
     height: '579',
   },
 };
+
+export const CITIES = [
+  'Paris',
+  'Cologne',
+  'Brussels',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf',
+];

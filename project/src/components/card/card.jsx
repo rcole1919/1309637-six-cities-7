@@ -6,15 +6,13 @@ import {CardType, AppRoute} from '../../const';
 import {getRatingPercent} from '../../utils';
 
 function Card({card, cardType, onListItemHover}) {
-  const {host: {name}, isPremium, previewImage, price, rating, type} = card;
+  const {host: {name}, isPremium, previewImage, price, rating, type, id} = card;
 
   const [offer, setOffer] = useState({
     isActive: false,
     isFavorite: false,
   });
   const {isFavorite} = offer;
-  const {isActive} = offer;
-
 
   const premiumMark = cardType === CardType.MAIN && isPremium && (
     <div className="place-card__mark">
@@ -42,14 +40,17 @@ function Card({card, cardType, onListItemHover}) {
       onMouseEnter={() => {
         setOffer({
           ...offer,
-          isActive: !isActive,
+          isActive: true,
         });
         onListItemHover && onListItemHover(name);
       }}
-      onMouseLeave={() => setOffer({
-        ...offer,
-        isActive: !isActive,
-      })}
+      onMouseLeave={() => {
+        setOffer({
+          ...offer,
+          isActive: false,
+        });
+        onListItemHover && onListItemHover();
+      }}
     >
       {premiumMark}
       <div className={`${wrapperClass} place-card__image-wrapper`}>
@@ -83,7 +84,7 @@ function Card({card, cardType, onListItemHover}) {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={AppRoute.ROOM}>{name}</Link>
+          <Link to={`${AppRoute.ROOM}/${id}`}>{name}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

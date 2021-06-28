@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+import {composeWithDevTools} from 'redux-devtools-extension';
 import App from './components/app/app';
 import {OFFERS} from './mock/offers';
+import {reducer} from './store/reducer';
 
-const Setting = {
-  PLACES_COUNT: 312,
-};
+const store = createStore(reducer, composeWithDevTools());
 
 ReactDOM.render(
-  <App cards={OFFERS} placesCount={Setting.PLACES_COUNT} />,
+  <Provider store={store}>
+    <App cards={OFFERS} />
+  </Provider>,
   document.getElementById('root'));

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import useMap from '../../hooks/useMap';
+import useMap from '../../hooks/use-map';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {DEFAULT_ICON_URL, ACTIVE_ICON_URL} from '../../const';
@@ -23,9 +23,10 @@ function Map({city, points, className, mapHeight, selectedPoint}) {
   });
 
   useEffect(() => {
+    const markers = [];
     if (map) {
       points.forEach((point) => {
-        leaflet
+        const marker = leaflet
           .marker({
             lat: point.latitude,
             lng: point.longitude,
@@ -33,11 +34,19 @@ function Map({city, points, className, mapHeight, selectedPoint}) {
             icon: (point.name === selectedPoint.name)
               ? activeIcon
               : defaultIcon,
-          })
-          .addTo(map);
+          });
+        markers.push(marker);
+        marker.addTo(map);
+
+        map.setView([city.latitude, city.longitude], city.zoom);
       });
     }
-  }, [map, points, defaultIcon, activeIcon, selectedPoint.name]);
+    return () => {
+      markers.forEach((el) => {
+        el.remove();
+      });
+    };
+  }, [map, points, defaultIcon, activeIcon, selectedPoint.name, city.latitude, city.longitude, city.zoom]);
 
   return (
     <section

@@ -141,7 +141,7 @@ export const OFFERS = [
       location: {
         latitude: 50.85045,
         longitude: 4.34878,
-        zoom: 5,
+        zoom: 10,
       },
       name: 'Brussels',
     },

@@ -4,7 +4,8 @@ export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',
   FAVORITES: '/favorites',
-  ROOM: '/offer',
+  ROOM: '/offer/:id',
+  ROOM_LINK: '/offer/',
 };
 
 export const DEFAULT_ICON_URL = 'img/pin.svg';

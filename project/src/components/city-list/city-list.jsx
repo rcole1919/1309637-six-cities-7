@@ -8,16 +8,17 @@ function CityList({currentCity, onCityChange}) {
       {
         CITIES.map((item) => (
           <li key={item} className="locations__item">
-            <a
-              className={`locations__item-link tabs__item${item === currentCity && ' tabs__item--active'}`}
-              href="/"
+            <div
+              style={{cursor: 'pointer'}}
+              tabIndex="0"
+              className={`locations__item-link tabs__item${item === currentCity ? ' tabs__item--active' : ''}`}
               onClick={(evt) => {
                 evt.preventDefault();
                 onCityChange(item);
               }}
             >
               <span>{item}</span>
-            </a>
+            </div>
           </li>
         ))
       }

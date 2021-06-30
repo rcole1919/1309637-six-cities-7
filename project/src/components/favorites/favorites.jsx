@@ -1,8 +1,9 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import Header from '../header/header';
 import CardList from '../card-list/card-list';
 import {Offers} from '../../prop-types';
-import {CardType} from '../../const';
+import {CardType, AppRoute} from '../../const';
 
 function Favorites({cards}) {
   return (
@@ -16,9 +17,9 @@ function Favorites({cards}) {
               <li className="favorites__locations-items">
                 <div className="favorites__locations locations locations--current">
                   <div className="locations__item">
-                    <a className="locations__item-link" href="/">
+                    <div className="locations__item-link">
                       <span>Amsterdam</span>
-                    </a>
+                    </div>
                   </div>
                 </div>
                 <CardList cards={cards} cardType={CardType.FAVORITES} />
@@ -28,9 +29,9 @@ function Favorites({cards}) {
         </div>
       </main>
       <footer className="footer container">
-        <a className="footer__logo-link" href="main.html">
+        <Link className="footer__logo-link" to={AppRoute.MAIN}>
           <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width={64} height={33} />
-        </a>
+        </Link>
       </footer>
     </div>
   );

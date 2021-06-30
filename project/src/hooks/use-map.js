@@ -7,11 +7,6 @@ function useMap(mapRef, city) {
   useEffect(() => {
     if (mapRef.current !== null && map === null) {
       const instance = leaflet.map(mapRef.current, {
-        center: {
-          lat: city.latitude,
-          lng: city.longitude,
-        },
-        zoom: city.zoom,
         zoomControl: false,
         marker: true,
       });

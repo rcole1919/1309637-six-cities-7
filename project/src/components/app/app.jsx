@@ -1,6 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
-// import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import Main from '../main/main';
 import SignIn from '../sign-in/sign-in';
 import Favorites from '../favorites/favorites';
@@ -22,7 +22,7 @@ function App({cards}) {
         <Route exact path={AppRoute.FAVORITES}>
           <Favorites cards={cards} />
         </Route>
-        <Route exact path={`${AppRoute.ROOM}/:id`}  render={(props) => <Room {...props} cards={cards} /> } />
+        <Route exact path={AppRoute.ROOM}  render={(props) => <Room {...props} cards={cards} /> } />
         <Route>
           <NotFound />
         </Route>
@@ -35,4 +35,9 @@ App.propTypes = {
   cards: Offers,
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  cards: state.offers,
+});
+
+export {App};
+export default connect(mapStateToProps)(App);

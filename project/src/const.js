@@ -4,7 +4,8 @@ export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',
   FAVORITES: '/favorites',
-  ROOM: '/offer',
+  ROOM: '/offer/:id',
+  ROOM_LINK: '/offer/',
 };
 
 export const DEFAULT_ICON_URL = 'img/pin.svg';
@@ -36,3 +37,12 @@ export const CITIES = [
   'Hamburg',
   'Dusseldorf',
 ];
+
+export const DEFAULT_CITY = CITIES[0];
+
+export const SortType = {
+  POPULAR: 'Popular',
+  PRICE_LOW_TO_HIGH: 'Price: low to high',
+  PRICE_HIGH_TO_LOW: 'Price: high to low',
+  TOP_RATED_FIRST: 'Top rated first',
+};

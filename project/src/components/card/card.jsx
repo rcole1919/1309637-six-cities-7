@@ -54,9 +54,9 @@ function Card({card, cardType, onListItemHover}) {
     >
       {premiumMark}
       <div className={`${wrapperClass} place-card__image-wrapper`}>
-        <a href="/#">
+        <Link to={`${AppRoute.ROOM_LINK}${id}`}>
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -84,7 +84,7 @@ function Card({card, cardType, onListItemHover}) {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`${AppRoute.ROOM}/${id}`}>{name}</Link>
+          <Link to={`${AppRoute.ROOM_LINK}${id}`}>{name}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

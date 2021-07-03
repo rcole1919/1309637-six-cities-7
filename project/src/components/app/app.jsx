@@ -1,7 +1,9 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Main from '../main/main';
+import Loading from '../loading/loading';
 import SignIn from '../sign-in/sign-in';
 import Favorites from '../favorites/favorites';
 import Room from '../room/room';
@@ -9,7 +11,13 @@ import NotFound from '../not-found/not-found';
 import {AppRoute} from '../../const';
 import {Offers} from '../../prop-types';
 
-function App({cards}) {
+function App({cards, isDataLoaded}) {
+  if (!isDataLoaded) {
+    return (
+      <Loading />
+    );
+  }
+
   return (
     <BrowserRouter>
       <Switch>
@@ -33,10 +41,12 @@ function App({cards}) {
 
 App.propTypes = {
   cards: Offers,
+  isDataLoaded: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   cards: state.offers,
+  isDataLoaded: state.isDataLoaded,
 });
 
 export {App};

@@ -9,13 +9,13 @@ import Map from '../map/map';
 import {Offers} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
 import {REVIEWS} from '../../mock/reviews';
-import {OFFERS} from '../../mock/offers';
+// import {OFFERS} from '../../mock/offers';
 import {MapType, CardType} from '../../const';
 
 function Room(props) {
   const [selectedPoint, setSelectedPoint] = useState({});
   const cardId = props.match.params.id;
-  const currentCard = props.cards.find((el) => el.id === cardId);
+  const currentCard = props.cards.find((el) => el.id === Number(cardId));
   if (!currentCard) {
     return (
       <NotFound />
@@ -36,7 +36,7 @@ function Room(props) {
     description,
   } = currentCard;
 
-  const points = props.cards.map((el) => ({...el.location, name: el.host.name}));
+  const points = props.cards.map((el) => ({...el.location, name: el.id}));
 
   const onListItemHover = (listItemName) => {
     if (listItemName) {
@@ -44,7 +44,7 @@ function Room(props) {
       setSelectedPoint(currentPoint);
       return;
     }
-    setSelectedPoint({name: ''});
+    setSelectedPoint({name: 0});
   };
 
   return (
@@ -156,7 +156,7 @@ function Room(props) {
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <CardList
-              cards={OFFERS}
+              cards={props.cards}
               cardType={CardType.ROOM}
               onListItemHover={onListItemHover}
             />

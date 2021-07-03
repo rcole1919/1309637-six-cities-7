@@ -6,13 +6,12 @@ import {CardType, AppRoute} from '../../const';
 import {getRatingPercent} from '../../utils';
 
 function Card({card, cardType, onListItemHover}) {
-  const {host: {name}, isPremium, previewImage, price, rating, type, id} = card;
+  const {host: {name}, isPremium, isFavorite, previewImage, price, rating, type, id} = card;
 
   const [offer, setOffer] = useState({
     isActive: false,
-    isFavorite: false,
+    isFavorite: isFavorite,
   });
-  const {isFavorite} = offer;
 
   const premiumMark = cardType === CardType.MAIN && isPremium && (
     <div className="place-card__mark">
@@ -42,7 +41,7 @@ function Card({card, cardType, onListItemHover}) {
           ...offer,
           isActive: true,
         });
-        onListItemHover && onListItemHover(name);
+        onListItemHover && onListItemHover(id);
       }}
       onMouseLeave={() => {
         setOffer({
@@ -65,11 +64,13 @@ function Card({card, cardType, onListItemHover}) {
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
-            className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`} type="button"
-            onClick={() => setOffer({
-              ...offer,
-              isFavorite: !isFavorite,
-            })}
+            className={`place-card__bookmark-button button ${offer.isFavorite && 'place-card__bookmark-button--active'}`} type="button"
+            onClick={() => {
+              setOffer({
+                ...offer,
+                isFavorite: !offer.isFavorite,
+              });
+            }}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
@@ -99,3 +100,4 @@ Card.propTypes = {
 };
 
 export default Card;
+

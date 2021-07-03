@@ -20,7 +20,7 @@ export const OfferItem = PropTypes.shape({
     isPro: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
   }),
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   images: PropTypes.arrayOf(
     PropTypes.string.isRequired,
   ),

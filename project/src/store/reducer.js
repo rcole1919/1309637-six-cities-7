@@ -1,11 +1,13 @@
-import {OFFERS} from '../mock/offers';
+// import {OFFERS} from '../mock/offers';
 import {ActionType} from './action';
-import {SortType, DEFAULT_CITY} from '../const';
+import {SortType, DEFAULT_CITY, AuthorizationStatus} from '../const';
 
 const initialState = {
   city: DEFAULT_CITY,
   sortType: SortType.POPULAR,
-  offers: OFFERS,
+  offers: [],
+  authorizationStatus: AuthorizationStatus.UNKNOWN,
+  isDataLoaded: false,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -24,6 +26,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         offers: action.payload,
+        isDataLoaded: true,
       };
     default:
       return state;

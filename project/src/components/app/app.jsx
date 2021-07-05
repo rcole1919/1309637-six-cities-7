@@ -8,11 +8,11 @@ import SignIn from '../sign-in/sign-in';
 import Favorites from '../favorites/favorites';
 import Room from '../room/room';
 import NotFound from '../not-found/not-found';
-import {AppRoute} from '../../const';
+import {AppRoute, AuthorizationStatus} from '../../const';
 import {Offers} from '../../prop-types';
 
-function App({cards, isDataLoaded}) {
-  if (!isDataLoaded) {
+function App({cards, isDataLoaded, authorizationStatus}) {
+  if (authorizationStatus === AuthorizationStatus.UNKNOWN || !isDataLoaded) {
     return (
       <Loading />
     );
@@ -42,11 +42,13 @@ function App({cards, isDataLoaded}) {
 App.propTypes = {
   cards: Offers,
   isDataLoaded: PropTypes.bool.isRequired,
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   cards: state.offers,
   isDataLoaded: state.isDataLoaded,
+  authorizationStatus: state.authorizationStatus,
 });
 
 export {App};

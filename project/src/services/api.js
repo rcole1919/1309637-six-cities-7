@@ -79,3 +79,21 @@ export const adaptOfferToClient = (offer) => {
 
   return adaptedOffer;
 };
+
+export const adaptUserToClient = (user) => {
+  const adaptedUser = Object.assign(
+    {},
+    user,
+    {
+      avatarUrl: user.avatar_url,
+      email: user.email,
+      id: user.id,
+      isPro: user.isPro,
+      name: user.name,
+    },
+  );
+
+  localStorage.setItem('user', JSON.stringify(adaptedUser));
+
+  return adaptedUser;
+};

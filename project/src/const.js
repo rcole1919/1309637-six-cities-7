@@ -1,5 +1,7 @@
 export const MAX_RATING = 5;
 
+export const MAX_NEARBY = 3;
+
 export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',

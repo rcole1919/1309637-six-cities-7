@@ -9,7 +9,7 @@ import Map from '../map/map';
 import {Offers} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
 import {REVIEWS} from '../../mock/reviews';
-import {MapType, CardType, AuthorizationStatus, MarkerType} from '../../const';
+import {MapType, CardType, AuthorizationStatus, MarkerType, MAX_NEARBY} from '../../const';
 import {connect} from 'react-redux';
 
 function Room(props) {
@@ -38,7 +38,7 @@ function Room(props) {
 
   const nearbyCards = props.cards
     .filter((el) => el.city.name === city.name && el.id !== Number(cardId))
-    .slice(0, 3);
+    .slice(0, MAX_NEARBY);
   const points = nearbyCards.map((el) => ({...el.location, name: el.id}));
 
   return (

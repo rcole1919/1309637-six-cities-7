@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {login} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../const';
 
-function SignIn({onSubmit, authorizationStatus}) {
+function SignIn({onSubmit, authorizationStatus, isBadRequest}) {
   const [isValid, setIsValid] = useState(false);
   const loginRef = useRef();
   const passwordRef = useRef();
@@ -38,7 +38,7 @@ function SignIn({onSubmit, authorizationStatus}) {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form onSubmit={handleSubmit} className="login__form form" action="/" method="post">
+            <form onSubmit={handleSubmit} className="login__form form">
               <div className="login__input-wrapper form__input-wrapper">
                 <label htmlFor="login" className="visually-hidden">E-mail</label>
                 <input
@@ -64,7 +64,7 @@ function SignIn({onSubmit, authorizationStatus}) {
                   onChange={handlePasswordChange}
                 />
               </div>
-              <button disabled={!isValid} className="login__submit form__submit button" type="submit">Sign in</button>
+              <button disabled={!isValid} className="login__submit form__submit button" type="submit">{isBadRequest ? 'Enter correct data' : 'Sign in'}</button>
             </form>
           </section>
           <section className="locations locations--login locations--current">
@@ -83,10 +83,12 @@ function SignIn({onSubmit, authorizationStatus}) {
 SignIn.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
+  isBadRequest: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
+  isBadRequest: state.isBadRequest,
 });
 
 const mapDispatchToProps = (dispatch) => ({

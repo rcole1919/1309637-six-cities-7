@@ -6,6 +6,7 @@ export const ActionType = {
   REDIRECT_TO_ROUTE: 'REDIRECT_TO_ROUTE',
   LOGOUT: 'LOGOUT',
   SET_USER: 'SET_USER',
+  SET_BAD_REQUEST: 'SET_BAD_REQUEST',
 };
 
 export const ActionCreator = {
@@ -35,5 +36,9 @@ export const ActionCreator = {
   setUser: (user) => ({
     type: ActionType.SET_USER,
     payload: user,
+  }),
+  setBadRequest: (bool) => ({
+    type: ActionType.SET_BAD_REQUEST,
+    payload: bool,
   }),
 };

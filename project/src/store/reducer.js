@@ -8,6 +8,7 @@ const initialState = {
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   isDataLoaded: false,
   user: null,
+  isBadRequest: false,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -32,6 +33,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         authorizationStatus: action.payload,
+        isBadRequest: action.payload === AuthorizationStatus.AUTH && false,
       };
     case ActionType.LOGOUT:
       return {
@@ -43,6 +45,11 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload,
+      };
+    case ActionType.SET_BAD_REQUEST:
+      return {
+        ...state,
+        isBadRequest: action.payload,
       };
     default:
       return state;

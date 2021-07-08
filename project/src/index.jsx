@@ -14,11 +14,12 @@ import {redirect} from './store/middlewares/redirect';
 
 const api = createAPI(
   () => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)),
+  () => store.dispatch(ActionCreator.setBadRequest(true)),
 );
 
 const store = createStore(reducer,
   composeWithDevTools(
-    applyMiddleware(thunk.withExtraArgument(api)),
+    applyMiddleware(thunk.withExtraArgument({api})),
     applyMiddleware(redirect),
   ),
 );

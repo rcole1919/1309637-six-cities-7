@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {Router as BrowserRouter, Switch, Route} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Main from '../main/main';
@@ -10,8 +10,11 @@ import Room from '../room/room';
 import NotFound from '../not-found/not-found';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {Offers} from '../../prop-types';
+import browserHistory from '../../browser-history';
+import PrivateRoute from '../private-route/private-route';
 
 function App({cards, isDataLoaded, authorizationStatus}) {
+
   if (authorizationStatus === AuthorizationStatus.UNKNOWN || !isDataLoaded) {
     return (
       <Loading />
@@ -19,7 +22,7 @@ function App({cards, isDataLoaded, authorizationStatus}) {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.MAIN}>
           <Main />
@@ -27,9 +30,7 @@ function App({cards, isDataLoaded, authorizationStatus}) {
         <Route exact path={AppRoute.SIGN_IN}>
           <SignIn />
         </Route>
-        <Route exact path={AppRoute.FAVORITES}>
-          <Favorites cards={cards} />
-        </Route>
+        <PrivateRoute exact path={AppRoute.FAVORITES} render={(props) => <Favorites {...props} cards={cards} /> } />
         <Route exact path={AppRoute.ROOM}  render={(props) => <Room {...props} cards={cards} /> } />
         <Route>
           <NotFound />

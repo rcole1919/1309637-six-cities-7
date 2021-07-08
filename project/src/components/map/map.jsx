@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import useMap from '../../hooks/use-map';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {DEFAULT_ICON_URL, ACTIVE_ICON_URL} from '../../const';
+import {DEFAULT_ICON_URL, ACTIVE_ICON_URL, MarkerType} from '../../const';
 
-function Map({city, points, className, mapHeight, selectedPoint}) {
+function Map({city, points, className, mapHeight, selectedPoint, markerType}) {
   const mapRef = useRef(null);
 
   const map = useMap(mapRef, city);
@@ -25,28 +25,51 @@ function Map({city, points, className, mapHeight, selectedPoint}) {
   useEffect(() => {
     const markers = [];
     if (map) {
-      points.forEach((point) => {
-        const marker = leaflet
+      if (markerType === MarkerType.DYNAMIC) {
+        points.forEach((point) => {
+          const marker = leaflet
+            .marker({
+              lat: point.latitude,
+              lng: point.longitude,
+            }, {
+              icon: (point.name === selectedPoint.name)
+                ? activeIcon
+                : defaultIcon,
+            });
+          markers.push(marker);
+          marker.addTo(map);
+        });
+      }
+      if (markerType === MarkerType.STATIC) {
+        points.forEach((point) => {
+          const marker = leaflet
+            .marker({
+              lat: point.latitude,
+              lng: point.longitude,
+            }, {
+              icon: defaultIcon,
+            });
+          markers.push(marker);
+          marker.addTo(map);
+        });
+        const selectedMarker = leaflet
           .marker({
-            lat: point.latitude,
-            lng: point.longitude,
+            lat: selectedPoint.latitude,
+            lng: selectedPoint.longitude,
           }, {
-            icon: (point.name === selectedPoint.name)
-              ? activeIcon
-              : defaultIcon,
+            icon: activeIcon,
           });
-        markers.push(marker);
-        marker.addTo(map);
-
-        map.setView([city.latitude, city.longitude], city.zoom);
-      });
+        markers.push(selectedMarker);
+        selectedMarker.addTo(map);
+      }
+      map.setView([city.latitude, city.longitude], city.zoom);
     }
     return () => {
       markers.forEach((el) => {
         el.remove();
       });
     };
-  }, [map, points, defaultIcon, activeIcon, selectedPoint.name, city.latitude, city.longitude, city.zoom]);
+  }, [map, points, defaultIcon, activeIcon, selectedPoint.name, city.latitude, city.longitude, city.zoom, markerType, selectedPoint.latitude, selectedPoint.longitude]);
 
   return (
     <section
@@ -79,6 +102,7 @@ Map.propTypes = {
   }),
   className: PropTypes.string.isRequired,
   mapHeight: PropTypes.string.isRequired,
+  markerType: PropTypes.string.isRequired,
 };
 
 export default Map;

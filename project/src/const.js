@@ -29,6 +29,11 @@ export const MapType = {
   },
 };
 
+export const MarkerType = {
+  DYNAMIC: 'DYNAMIC',
+  STATIC: 'STATIC',
+};
+
 export const CITIES = [
   'Paris',
   'Cologne',

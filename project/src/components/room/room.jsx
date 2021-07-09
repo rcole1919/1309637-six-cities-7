@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../header/header';
 import NotFound from '../not-found/not-found';
@@ -9,11 +9,10 @@ import Map from '../map/map';
 import {Offers} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
 import {REVIEWS} from '../../mock/reviews';
-// import {OFFERS} from '../../mock/offers';
-import {MapType, CardType} from '../../const';
+import {MapType, CardType, AuthorizationStatus, MarkerType, MAX_NEARBY} from '../../const';
+import {connect} from 'react-redux';
 
 function Room(props) {
-  const [selectedPoint, setSelectedPoint] = useState({});
   const cardId = props.match.params.id;
   const currentCard = props.cards.find((el) => el.id === Number(cardId));
   if (!currentCard) {
@@ -31,21 +30,16 @@ function Room(props) {
     type,
     price,
     goods,
+    location,
     city,
     host: {avatarUrl, isPro, name},
     description,
   } = currentCard;
 
-  const points = props.cards.map((el) => ({...el.location, name: el.id}));
-
-  const onListItemHover = (listItemName) => {
-    if (listItemName) {
-      const currentPoint = points.find((point) => point.name === listItemName);
-      setSelectedPoint(currentPoint);
-      return;
-    }
-    setSelectedPoint({name: 0});
-  };
+  const nearbyCards = props.cards
+    .filter((el) => el.city.name === city.name && el.id !== Number(cardId))
+    .slice(0, MAX_NEARBY);
+  const points = nearbyCards.map((el) => ({...el.location, name: el.id}));
 
   return (
     <div className="page">
@@ -140,7 +134,7 @@ function Room(props) {
               </div>
               <section className="property__reviews reviews">
                 <ReviewList reviews={REVIEWS} />
-                <ReviewForm />
+                {props.authorizationStatus === AuthorizationStatus.AUTH && <ReviewForm />}
               </section>
             </div>
           </div>
@@ -149,16 +143,16 @@ function Room(props) {
             className={MapType.ROOM.class}
             city={city.location}
             points={points}
-            selectedPoint={selectedPoint}
+            selectedPoint={location}
+            markerType={MarkerType.STATIC}
           />
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <CardList
-              cards={props.cards}
+              cards={nearbyCards}
               cardType={CardType.ROOM}
-              onListItemHover={onListItemHover}
             />
           </section>
         </div>
@@ -174,6 +168,12 @@ Room.propTypes = {
       id: PropTypes.string.isRequired,
     }),
   }),
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
-export default Room;
+const mapStateToProps = (state) => ({
+  authorizationStatus: state.authorizationStatus,
+});
+
+export {Room};
+export default connect(mapStateToProps)(Room);

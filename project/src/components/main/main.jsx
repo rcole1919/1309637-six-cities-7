@@ -8,7 +8,7 @@ import Map from '../map/map';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../store/action';
 import {Offers} from '../../prop-types';
-import {CardType, MapType} from '../../const';
+import {CardType, MapType, MarkerType} from '../../const';
 import {sort} from '../../utils';
 
 function Main({cards, city, onCityChange, sortType, onSortTypeClick}) {
@@ -51,6 +51,7 @@ function Main({cards, city, onCityChange, sortType, onSortTypeClick}) {
                   city={filtredCards[0] && filtredCards[0].city.location}
                   points={points}
                   selectedPoint={selectedPoint}
+                  markerType={MarkerType.DYNAMIC}
                 />
               </div>
             </div>

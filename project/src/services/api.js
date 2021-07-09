@@ -11,7 +11,7 @@ const HttpCode = {
 
 const token = localStorage.getItem('token') ?? '';
 
-export const createAPI = (onUnauthorized) => {
+export const createAPI = (onUnauthorized, onBadRequest) => {
   const api = axios.create({
     baseURL: BACKEND_URL,
     timeout: REQUEST_TIMEOUT,
@@ -27,6 +27,10 @@ export const createAPI = (onUnauthorized) => {
 
     if (response.status === HttpCode.UNAUTHORIZED) {
       onUnauthorized();
+    }
+
+    if (response.status === HttpCode.BAD_REQUEST) {
+      onBadRequest();
     }
 
     throw err;
@@ -78,4 +82,22 @@ export const adaptOfferToClient = (offer) => {
   );
 
   return adaptedOffer;
+};
+
+export const adaptUserToClient = (user) => {
+  const adaptedUser = Object.assign(
+    {},
+    user,
+    {
+      avatarUrl: user.avatar_url,
+      email: user.email,
+      id: user.id,
+      isPro: user.isPro,
+      name: user.name,
+    },
+  );
+
+  localStorage.setItem('user', JSON.stringify(adaptedUser));
+
+  return adaptedUser;
 };

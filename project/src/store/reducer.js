@@ -1,4 +1,3 @@
-// import {OFFERS} from '../mock/offers';
 import {ActionType} from './action';
 import {SortType, DEFAULT_CITY, AuthorizationStatus} from '../const';
 
@@ -8,6 +7,8 @@ const initialState = {
   offers: [],
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   isDataLoaded: false,
+  user: null,
+  isBadRequest: false,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -27,6 +28,28 @@ export const reducer = (state = initialState, action) => {
         ...state,
         offers: action.payload,
         isDataLoaded: true,
+      };
+    case ActionType.REQUIRED_AUTHORIZATION:
+      return {
+        ...state,
+        authorizationStatus: action.payload,
+        isBadRequest: action.payload === AuthorizationStatus.AUTH && false,
+      };
+    case ActionType.LOGOUT:
+      return {
+        ...state,
+        authorizationStatus: AuthorizationStatus.NO_AUTH,
+        user: null,
+      };
+    case ActionType.SET_USER:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    case ActionType.SET_BAD_REQUEST:
+      return {
+        ...state,
+        isBadRequest: action.payload,
       };
     default:
       return state;

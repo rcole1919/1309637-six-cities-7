@@ -59,3 +59,11 @@ export const ReviewItem = PropTypes.shape({
 export const Reviews = PropTypes.arrayOf(
   ReviewItem,
 );
+
+export const authInfo = PropTypes.shape({
+  avatarUrl: PropTypes.string,
+  email: PropTypes.string,
+  id: PropTypes.number,
+  isPro: PropTypes.bool,
+  name: PropTypes.string,
+});

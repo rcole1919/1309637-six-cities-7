@@ -1,5 +1,7 @@
 export const MAX_RATING = 5;
 
+export const MAX_NEARBY = 3;
+
 export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',
@@ -29,6 +31,11 @@ export const MapType = {
   },
 };
 
+export const MarkerType = {
+  DYNAMIC: 'DYNAMIC',
+  STATIC: 'STATIC',
+};
+
 export const CITIES = [
   'Paris',
   'Cologne',
@@ -51,6 +58,8 @@ export const APIRoute = {
   HOTELS: '/hotels',
   NEARBY: '/nearby',
   FAVORITE: '/favorite',
+  LOGIN: '/login',
+  LOGOUT: '/logout',
 };
 
 export const AuthorizationStatus = {

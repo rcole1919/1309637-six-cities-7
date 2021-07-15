@@ -5,6 +5,11 @@ const initialState = {
   city: DEFAULT_CITY,
   sortType: SortType.POPULAR,
   offers: [],
+  activeOffer: null,
+  nearbyOffers: {
+    id: null,
+    offers: [],
+  },
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   isDataLoaded: false,
   user: null,
@@ -50,6 +55,27 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         isBadRequest: action.payload,
+      };
+    case ActionType.SET_ACTIVE_OFFER:
+      return {
+        ...state,
+        activeOffer: action.payload,
+        isDataLoaded: true,
+      };
+    case ActionType.SET_NEARBY_OFFERS:
+      return {
+        ...state,
+        nearbyOffers: action.payload,
+      };
+    case ActionType.START_LOADING:
+      return {
+        ...state,
+        isDataLoaded: false,
+      };
+    case ActionType.FINISH_LOADING:
+      return {
+        ...state,
+        isDataLoaded: true,
       };
     default:
       return state;

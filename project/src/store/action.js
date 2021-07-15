@@ -7,6 +7,10 @@ export const ActionType = {
   LOGOUT: 'LOGOUT',
   SET_USER: 'SET_USER',
   SET_BAD_REQUEST: 'SET_BAD_REQUEST',
+  SET_ACTIVE_OFFER: 'OFFER',
+  SET_NEARBY_OFFERS: 'SET_NEARBY_OFFERS',
+  START_LOADING: 'START_LOADING',
+  FINISH_LOADING: 'FINISH_LOADING',
 };
 
 export const ActionCreator = {
@@ -18,7 +22,7 @@ export const ActionCreator = {
     type: ActionType.SORT_OFFERS,
     payload: sortType,
   }),
-  fillOffersAction: (offers) => ({
+  fillOffers: (offers) => ({
     type: ActionType.FILL_OFFERS,
     payload: offers,
   }),
@@ -40,5 +44,19 @@ export const ActionCreator = {
   setBadRequest: (bool) => ({
     type: ActionType.SET_BAD_REQUEST,
     payload: bool,
+  }),
+  setActiveOffer: (offer) => ({
+    type: ActionType.SET_ACTIVE_OFFER,
+    payload: offer,
+  }),
+  setNearbyOffers: (offers) => ({
+    type: ActionType.SET_NEARBY_OFFERS,
+    payload: offers,
+  }),
+  startLoading: () => ({
+    type: ActionType.START_LOADING,
+  }),
+  finishLoading: () => ({
+    type: ActionType.FINISH_LOADING,
   }),
 };

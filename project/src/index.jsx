@@ -11,10 +11,12 @@ import {ActionCreator} from './store/action';
 import {AuthorizationStatus} from './const';
 import {fetchOffers, checkAuth} from './store/api-actions';
 import {redirect} from './store/middlewares/redirect';
+import NotFound from './components/not-found/not-found';
 
 const api = createAPI(
   () => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)),
   () => store.dispatch(ActionCreator.setBadRequest(true)),
+  () => <NotFound />,
 );
 
 const store = createStore(reducer,

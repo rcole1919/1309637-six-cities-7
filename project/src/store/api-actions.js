@@ -5,7 +5,7 @@ import {adaptOfferToClient, adaptUserToClient} from '../services/api';
 export const fetchOffers = () => (dispatch, _getState, {api}) => (
   api.get(APIRoute.HOTELS)
     .then(({data}) => data.map((offer) => adaptOfferToClient(offer)))
-    .then((data) => dispatch(ActionCreator.fillOffersAction(data)))
+    .then((data) => dispatch(ActionCreator.fillOffers(data)))
 );
 
 export const checkAuth = () => (dispatch, _getState, {api}) => (
@@ -31,4 +31,17 @@ export const logout = () => (dispatch, _getState, {api}) => (
       localStorage.removeItem('user');
     })
     .then(() => dispatch(ActionCreator.signOut()))
+);
+
+export const fetchActiveOffer = (id) => (dispatch, _getState, {api}) => {
+  dispatch(ActionCreator.startLoading());
+  api.get(`${APIRoute.HOTELS}/${id}`)
+    .then(({data}) => adaptOfferToClient(data))
+    .then((data) => dispatch(ActionCreator.setActiveOffer(data)));
+};
+
+export const fetchNearbyOffers = (id) => (dispatch, _getState, {api}) => (
+  api.get(`${APIRoute.HOTELS}/${id}/${APIRoute.NEARBY}`)
+    .then(({data}) => data.map((offer) => adaptOfferToClient(offer)))
+    .then((data) => dispatch(ActionCreator.setNearbyOffers(data)))
 );

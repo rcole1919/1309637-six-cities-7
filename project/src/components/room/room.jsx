@@ -1,25 +1,43 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Header from '../header/header';
 import NotFound from '../not-found/not-found';
+import Loading from '../loading/loading';
 import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
-import {Offers} from '../../prop-types';
+import {OfferItem, Offers} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
 import {REVIEWS} from '../../mock/reviews';
 import {MapType, CardType, AuthorizationStatus, MarkerType, MAX_NEARBY} from '../../const';
 import {connect} from 'react-redux';
+import {fetchActiveOffer} from '../../store/api-actions';
+import {ActionCreator} from '../../store/action';
 
 function Room(props) {
   const cardId = props.match.params.id;
-  const currentCard = props.cards.find((el) => el.id === Number(cardId));
+  const {isDataLoaded, onfetchActiveOffer, activeOffer, onStartLoading, onFinishLoading} = props;
+  // const currentCard = props.cards.find((el) => el.id === Number(cardId));
+
+  useEffect(() => {
+    if (activeOffer === null || activeOffer.id !== Number(cardId)) {
+      onfetchActiveOffer(cardId);
+    }
+  }, [cardId, onfetchActiveOffer, activeOffer, onStartLoading, isDataLoaded, onFinishLoading]);
+
+  if (!isDataLoaded) {
+    return (
+      <Loading />
+    );
+  }
+  const currentCard = activeOffer;
   if (!currentCard) {
     return (
       <NotFound />
     );
   }
+
   const {
     images,
     isPremium,
@@ -169,11 +187,30 @@ Room.propTypes = {
     }),
   }),
   authorizationStatus: PropTypes.string.isRequired,
+  isDataLoaded: PropTypes.bool.isRequired,
+  onfetchActiveOffer: PropTypes.func.isRequired,
+  activeOffer: OfferItem,
+  onStartLoading: PropTypes.func.isRequired,
+  onFinishLoading: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
+  isDataLoaded: state.isDataLoaded,
+  activeOffer: state.activeOffer,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onStartLoading() {
+    dispatch(ActionCreator.startLoading());
+  },
+  onFinishLoading() {
+    dispatch(ActionCreator.finishLoading());
+  },
+  onfetchActiveOffer(id) {
+    dispatch(fetchActiveOffer(id));
+  },
 });
 
 export {Room};
-export default connect(mapStateToProps)(Room);
+export default connect(mapStateToProps, mapDispatchToProps)(Room);

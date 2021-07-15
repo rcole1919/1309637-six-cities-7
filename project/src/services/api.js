@@ -1,4 +1,6 @@
 import axios from 'axios';
+import React from 'react';
+import NotFound from '../components/not-found/not-found';
 
 const BACKEND_URL = 'https://7.react.pages.academy/six-cities';
 const REQUEST_TIMEOUT = 5000;
@@ -11,7 +13,7 @@ const HttpCode = {
 
 const token = localStorage.getItem('token') ?? '';
 
-export const createAPI = (onUnauthorized, onBadRequest) => {
+export const createAPI = (onUnauthorized, onBadRequest, onNotFound) => {
   const api = axios.create({
     baseURL: BACKEND_URL,
     timeout: REQUEST_TIMEOUT,
@@ -31,6 +33,11 @@ export const createAPI = (onUnauthorized, onBadRequest) => {
 
     if (response.status === HttpCode.BAD_REQUEST) {
       onBadRequest();
+    }
+
+    if (response.status === HttpCode.NOT_FOUND) {
+      console.log('no hotel');
+      onNotFound();
     }
 
     throw err;
@@ -81,6 +88,11 @@ export const adaptOfferToClient = (offer) => {
     },
   );
 
+  delete adaptedOffer.is_favorite;
+  delete adaptedOffer.is_premium;
+  delete adaptedOffer.max_adults;
+  delete adaptedOffer.preview_image;
+
   return adaptedOffer;
 };
 
@@ -92,10 +104,13 @@ export const adaptUserToClient = (user) => {
       avatarUrl: user.avatar_url,
       email: user.email,
       id: user.id,
-      isPro: user.isPro,
+      isPro: user.is_pro,
       name: user.name,
     },
   );
+
+  delete adaptedUser.avatar_url;
+  delete adaptedUser.is_pro;
 
   localStorage.setItem('user', JSON.stringify(adaptedUser));
 

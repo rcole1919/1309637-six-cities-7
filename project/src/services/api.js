@@ -1,6 +1,4 @@
 import axios from 'axios';
-import React from 'react';
-import NotFound from '../components/not-found/not-found';
 
 const BACKEND_URL = 'https://7.react.pages.academy/six-cities';
 const REQUEST_TIMEOUT = 5000;

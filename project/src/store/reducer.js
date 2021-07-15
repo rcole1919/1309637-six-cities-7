@@ -12,6 +12,7 @@ const initialState = {
   },
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   isDataLoaded: false,
+  isActiveLoaded: true,
   user: null,
   isBadRequest: false,
 };
@@ -60,7 +61,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         activeOffer: action.payload,
-        isDataLoaded: true,
+        isActiveLoaded: true,
       };
     case ActionType.SET_NEARBY_OFFERS:
       return {
@@ -70,12 +71,12 @@ export const reducer = (state = initialState, action) => {
     case ActionType.START_LOADING:
       return {
         ...state,
-        isDataLoaded: false,
+        isActiveLoaded: false,
       };
     case ActionType.FINISH_LOADING:
       return {
         ...state,
-        isDataLoaded: true,
+        isActiveLoaded: true,
       };
     default:
       return state;

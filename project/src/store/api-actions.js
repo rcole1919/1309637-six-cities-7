@@ -37,7 +37,7 @@ export const fetchActiveOffer = (id) => (dispatch, _getState, {api}) => {
   dispatch(ActionCreator.startLoading());
   api.get(`${APIRoute.HOTELS}/${id}`)
     .then(({data}) => adaptOfferToClient(data))
-    .then((data) => dispatch(ActionCreator.setActiveOffer(data)));
+    .then((data) => dispatch(ActionCreator.setActiveOffer(data)))
 };
 
 export const fetchNearbyOffers = (id) => (dispatch, _getState, {api}) => (

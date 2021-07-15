@@ -13,26 +13,27 @@ import {REVIEWS} from '../../mock/reviews';
 import {MapType, CardType, AuthorizationStatus, MarkerType, MAX_NEARBY} from '../../const';
 import {connect} from 'react-redux';
 import {fetchActiveOffer} from '../../store/api-actions';
-import {ActionCreator} from '../../store/action';
+// import {ActionCreator} from '../../store/action';
 
 function Room(props) {
   const cardId = props.match.params.id;
-  const {isDataLoaded, onfetchActiveOffer, activeOffer, onStartLoading, onFinishLoading} = props;
-
+  const {isActiveLoaded, onfetchActiveOffer, activeOffer} = props;
   // const currentCard = props.cards.find((el) => el.id === Number(cardId));
   useEffect(() => {
     if (activeOffer === null || activeOffer.id !== Number(cardId)) {
+      console.log('fetch');
       onfetchActiveOffer(cardId);
     }
-  }, [cardId, onfetchActiveOffer, activeOffer, onStartLoading, isDataLoaded, onFinishLoading]);
+  }, [cardId, onfetchActiveOffer, activeOffer]);
 
-  if (!isDataLoaded) {
+  if (!isActiveLoaded) {
+    console.log('loading')
     return (
       <Loading />
     );
   }
   const currentCard = activeOffer;
-  if (!currentCard) {
+  if (activeOffer === null) {
     return (
       <NotFound />
     );
@@ -187,26 +188,26 @@ Room.propTypes = {
     }),
   }),
   authorizationStatus: PropTypes.string.isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
+  isActiveLoaded: PropTypes.bool.isRequired,
   onfetchActiveOffer: PropTypes.func.isRequired,
   activeOffer: OfferItem,
-  onStartLoading: PropTypes.func.isRequired,
-  onFinishLoading: PropTypes.func.isRequired,
+  // onStartLoading: PropTypes.func.isRequired,
+  // onFinishLoading: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
-  isDataLoaded: state.isDataLoaded,
+  isActiveLoaded: state.isActiveLoaded,
   activeOffer: state.activeOffer,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onStartLoading() {
-    dispatch(ActionCreator.startLoading());
-  },
-  onFinishLoading() {
-    dispatch(ActionCreator.finishLoading());
-  },
+  // onStartLoading() {
+  //   dispatch(ActionCreator.startLoading());
+  // },
+  // onFinishLoading() {
+  //   dispatch(ActionCreator.finishLoading());
+  // },
   onfetchActiveOffer(id) {
     dispatch(fetchActiveOffer(id));
   },

@@ -18,8 +18,8 @@ import {ActionCreator} from '../../store/action';
 function Room(props) {
   const cardId = props.match.params.id;
   const {isDataLoaded, onfetchActiveOffer, activeOffer, onStartLoading, onFinishLoading} = props;
-  // const currentCard = props.cards.find((el) => el.id === Number(cardId));
 
+  // const currentCard = props.cards.find((el) => el.id === Number(cardId));
   useEffect(() => {
     if (activeOffer === null || activeOffer.id !== Number(cardId)) {
       onfetchActiveOffer(cardId);

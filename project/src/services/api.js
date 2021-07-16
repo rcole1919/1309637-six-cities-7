@@ -34,7 +34,7 @@ export const createAPI = (onUnauthorized, onBadRequest, onNotFound) => {
     }
 
     if (response.status === HttpCode.NOT_FOUND) {
-      console.log('no hotel');
+      // console.log('no hotel');
       onNotFound();
     }
 
@@ -113,4 +113,25 @@ export const adaptUserToClient = (user) => {
   localStorage.setItem('user', JSON.stringify(adaptedUser));
 
   return adaptedUser;
+};
+
+export const adaptReviewToClient = (review) => {
+  const adaptedReview = Object.assign(
+    {},
+    review,
+    {
+      comment: review.comment,
+      id: review.id,
+      rating: review.rating,
+      date: review.date,
+      user: {
+        avatarUrl: review.user.avatar_url,
+        id: review.user.id,
+        isPro: review.user.is_pro,
+        name: review.user.name,
+      },
+    },
+  );
+
+  return adaptedReview;
 };

@@ -7,27 +7,22 @@ import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
-import {OfferItem, Offers} from '../../prop-types';
+import {OfferItem, Offers, Reviews} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
-import {REVIEWS} from '../../mock/reviews';
-import {MapType, CardType, AuthorizationStatus, MarkerType, MAX_NEARBY} from '../../const';
+import {MapType, CardType, AuthorizationStatus, MarkerType} from '../../const';
 import {connect} from 'react-redux';
 import {fetchActiveOffer} from '../../store/api-actions';
-// import {ActionCreator} from '../../store/action';
 
 function Room(props) {
   const cardId = props.match.params.id;
-  const {isActiveLoaded, onfetchActiveOffer, activeOffer} = props;
-  // const currentCard = props.cards.find((el) => el.id === Number(cardId));
+  const {isActiveLoaded, onfetchActiveOffer, activeOffer, nearbyOffers, reviews} = props;
   useEffect(() => {
     if (activeOffer === null || activeOffer.id !== Number(cardId)) {
-      console.log('fetch');
       onfetchActiveOffer(cardId);
     }
   }, [cardId, onfetchActiveOffer, activeOffer]);
 
   if (!isActiveLoaded) {
-    console.log('loading')
     return (
       <Loading />
     );
@@ -55,10 +50,8 @@ function Room(props) {
     description,
   } = currentCard;
 
-  const nearbyCards = props.cards
-    .filter((el) => el.city.name === city.name && el.id !== Number(cardId))
-    .slice(0, MAX_NEARBY);
-  const points = nearbyCards.map((el) => ({...el.location, name: el.id}));
+  const nearbyCards = nearbyOffers;
+  const points = nearbyCards.length > 0 ? nearbyCards.map((el) => ({...el.location, name: el.id})) : null;
 
   return (
     <div className="page">
@@ -152,8 +145,14 @@ function Room(props) {
                 </div>
               </div>
               <section className="property__reviews reviews">
-                <ReviewList reviews={REVIEWS} />
-                {props.authorizationStatus === AuthorizationStatus.AUTH && <ReviewForm />}
+                {
+                  reviews.length > 0 &&
+                  <ReviewList reviews={reviews} />
+                }
+                {
+                  props.authorizationStatus === AuthorizationStatus.AUTH &&
+                  <ReviewForm id={cardId} />
+                }
               </section>
             </div>
           </div>
@@ -166,22 +165,24 @@ function Room(props) {
             markerType={MarkerType.STATIC}
           />
         </section>
-        <div className="container">
-          <section className="near-places places">
-            <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <CardList
-              cards={nearbyCards}
-              cardType={CardType.ROOM}
-            />
-          </section>
-        </div>
+        {
+          nearbyCards.length > 0 &&
+          <div className="container">
+            <section className="near-places places">
+              <h2 className="near-places__title">Other places in the neighbourhood</h2>
+              <CardList
+                cards={nearbyCards}
+                cardType={CardType.ROOM}
+              />
+            </section>
+          </div>
+        }
       </main>
     </div>
   );
 }
 
 Room.propTypes = {
-  cards: Offers,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -191,23 +192,19 @@ Room.propTypes = {
   isActiveLoaded: PropTypes.bool.isRequired,
   onfetchActiveOffer: PropTypes.func.isRequired,
   activeOffer: OfferItem,
-  // onStartLoading: PropTypes.func.isRequired,
-  // onFinishLoading: PropTypes.func.isRequired,
+  nearbyOffers: Offers,
+  reviews: Reviews,
 };
 
 const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
   isActiveLoaded: state.isActiveLoaded,
   activeOffer: state.activeOffer,
+  nearbyOffers: state.nearbyOffers,
+  reviews: state.reviews,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // onStartLoading() {
-  //   dispatch(ActionCreator.startLoading());
-  // },
-  // onFinishLoading() {
-  //   dispatch(ActionCreator.finishLoading());
-  // },
   onfetchActiveOffer(id) {
     dispatch(fetchActiveOffer(id));
   },

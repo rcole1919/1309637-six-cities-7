@@ -1,6 +1,6 @@
-import {APIRoute, AuthorizationStatus} from '../const';
+import {APIRoute, AuthorizationStatus, MAX_REVIEWS} from '../const';
 import {ActionCreator} from './action';
-import {adaptOfferToClient, adaptUserToClient} from '../services/api';
+import {adaptOfferToClient, adaptReviewToClient, adaptUserToClient} from '../services/api';
 
 export const fetchOffers = () => (dispatch, _getState, {api}) => (
   api.get(APIRoute.HOTELS)
@@ -35,13 +35,34 @@ export const logout = () => (dispatch, _getState, {api}) => (
 
 export const fetchActiveOffer = (id) => (dispatch, _getState, {api}) => {
   dispatch(ActionCreator.startLoading());
-  api.get(`${APIRoute.HOTELS}/${id}`)
+
+  const getActiveOffer = api.get(`${APIRoute.HOTELS}/${id}`)
     .then(({data}) => adaptOfferToClient(data))
-    .then((data) => dispatch(ActionCreator.setActiveOffer(data)))
+    .then((data) => dispatch(ActionCreator.setActiveOffer(data)));
+
+  const getNearbyOffers = api.get(`${APIRoute.HOTELS}/${id}${APIRoute.NEARBY}`)
+    .then(({data}) => data.map((offer) => adaptOfferToClient(offer)))
+    .then((data) => dispatch(ActionCreator.setNearbyOffers(data)));
+
+  const getReviews = api.get(`${APIRoute.COMMENTS}/${id}`)
+    .then(({data}) => data.map((review) => adaptReviewToClient(review)).slice(-MAX_REVIEWS).reverse())
+    .then((data) => dispatch(ActionCreator.setReviews(data)));
+
+  Promise.all([getActiveOffer, getNearbyOffers, getReviews])
+    .then(() => dispatch(ActionCreator.finishLoading()));
 };
 
-export const fetchNearbyOffers = (id) => (dispatch, _getState, {api}) => (
-  api.get(`${APIRoute.HOTELS}/${id}/${APIRoute.NEARBY}`)
-    .then(({data}) => data.map((offer) => adaptOfferToClient(offer)))
-    .then((data) => dispatch(ActionCreator.setNearbyOffers(data)))
-);
+export const uploadReview = (id, uploadingReview, clearForm) => (dispatch, _getState, {api}) => {
+  dispatch(ActionCreator.toggleReviewUploading());
+  api.post(`${APIRoute.COMMENTS}/${id}`, uploadingReview)
+    .then(({data}) => data.map((review) => adaptReviewToClient(review)).slice(-MAX_REVIEWS).reverse())
+    .then((data) => {
+      dispatch(ActionCreator.setReviews(data));
+      dispatch(ActionCreator.toggleReviewUploading());
+      clearForm();
+    })
+    .catch(() => {
+      dispatch(ActionCreator.toggleReviewUploading());
+      clearForm();
+    });
+};

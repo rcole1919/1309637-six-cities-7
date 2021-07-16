@@ -6,15 +6,14 @@ const initialState = {
   sortType: SortType.POPULAR,
   offers: [],
   activeOffer: null,
-  nearbyOffers: {
-    id: null,
-    offers: [],
-  },
+  nearbyOffers: [],
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   isDataLoaded: false,
   isActiveLoaded: true,
+  isReviewUploaded: true,
   user: null,
   isBadRequest: false,
+  reviews: [],
 };
 
 export const reducer = (state = initialState, action) => {
@@ -61,22 +60,33 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         activeOffer: action.payload,
-        isActiveLoaded: true,
       };
     case ActionType.SET_NEARBY_OFFERS:
       return {
         ...state,
         nearbyOffers: action.payload,
       };
-    case ActionType.START_LOADING:
+    case ActionType.START_ACTIVE_LOADING:
       return {
         ...state,
         isActiveLoaded: false,
+        nearbyOffers: [],
+        reviews: [],
       };
-    case ActionType.FINISH_LOADING:
+    case ActionType.FINISH_ACTIVE_LOADING:
       return {
         ...state,
         isActiveLoaded: true,
+      };
+    case ActionType.SET_REVIEWS:
+      return {
+        ...state,
+        reviews: action.payload,
+      };
+    case ActionType.TOGGLE_REVIEW_UPLOADING:
+      return {
+        ...state,
+        isReviewUploaded: !state.isReviewUploaded,
       };
     default:
       return state;

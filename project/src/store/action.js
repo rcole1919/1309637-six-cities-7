@@ -9,8 +9,10 @@ export const ActionType = {
   SET_BAD_REQUEST: 'SET_BAD_REQUEST',
   SET_ACTIVE_OFFER: 'OFFER',
   SET_NEARBY_OFFERS: 'SET_NEARBY_OFFERS',
-  START_LOADING: 'START_LOADING',
-  FINISH_LOADING: 'FINISH_LOADING',
+  START_ACTIVE_LOADING: 'START_ACTIVE_LOADING',
+  FINISH_ACTIVE_LOADING: 'FINISH_ACTIVE_LOADING',
+  SET_REVIEWS: 'SET_REVIEWS',
+  TOGGLE_REVIEW_UPLOADING: 'TOGGLE_REVIEW_UPLOADING',
 };
 
 export const ActionCreator = {
@@ -54,9 +56,16 @@ export const ActionCreator = {
     payload: offers,
   }),
   startLoading: () => ({
-    type: ActionType.START_LOADING,
+    type: ActionType.START_ACTIVE_LOADING,
   }),
   finishLoading: () => ({
-    type: ActionType.FINISH_LOADING,
+    type: ActionType.FINISH_ACTIVE_LOADING,
+  }),
+  setReviews: (reviews) => ({
+    type: ActionType.SET_REVIEWS,
+    payload: reviews,
+  }),
+  toggleReviewUploading: () => ({
+    type: ActionType.TOGGLE_REVIEW_UPLOADING,
   }),
 };

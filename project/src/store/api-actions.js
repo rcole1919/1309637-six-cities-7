@@ -16,6 +16,11 @@ export const fetchOffers = () => (dispatch, _getState, {api}) => (
 
 export const checkAuth = () => (dispatch, _getState, {api}) => (
   api.get(APIRoute.LOGIN)
+    .then(({data}) => {
+      localStorage.setItem('token', data.token);
+      return adaptUserToClient(data);
+    })
+    .then((data) => dispatch(ActionCreator.setUser(data)))
     .then(() => dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH)))
     .catch(() => {})
 );
@@ -35,7 +40,6 @@ export const logout = () => (dispatch, _getState, {api}) => (
   api.delete(APIRoute.LOGOUT)
     .then(() => {
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
     })
     .then(() => dispatch(ActionCreator.signOut()))
 );

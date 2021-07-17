@@ -12,7 +12,6 @@ import {AppRoute, AuthorizationStatus} from '../../const';
 import {Offers} from '../../prop-types';
 import browserHistory from '../../browser-history';
 import PrivateRoute from '../private-route/private-route';
-import {ActionCreator} from '../../store/action';
 import {fetchOffers, checkAuth} from '../../store/api-actions';
 
 function App({cards, isDataLoaded, authorizationStatus, init}) {
@@ -63,10 +62,6 @@ const mapDispatchToProps = (dispatch) => ({
   init() {
     dispatch(checkAuth());
     dispatch(fetchOffers());
-    const user = localStorage.getItem('user');
-    if (user) {
-      dispatch(ActionCreator.setUser(JSON.parse(user)));
-    }
   },
 });
 

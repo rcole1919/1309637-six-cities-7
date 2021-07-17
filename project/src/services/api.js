@@ -105,8 +105,6 @@ export const adaptUserToClient = (user) => {
   delete adaptedUser.avatar_url;
   delete adaptedUser.is_pro;
 
-  localStorage.setItem('user', JSON.stringify(adaptedUser));
-
   return adaptedUser;
 };
 

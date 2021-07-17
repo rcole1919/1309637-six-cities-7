@@ -43,10 +43,6 @@ export const ActionCreator = {
     type: ActionType.SET_USER,
     payload: user,
   }),
-  setBadRequest: (bool) => ({
-    type: ActionType.SET_BAD_REQUEST,
-    payload: bool,
-  }),
   setActiveOffer: (offer) => ({
     type: ActionType.SET_ACTIVE_OFFER,
     payload: offer,

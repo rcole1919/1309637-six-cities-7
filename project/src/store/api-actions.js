@@ -2,6 +2,12 @@ import {APIRoute, AuthorizationStatus, MAX_REVIEWS} from '../const';
 import {ActionCreator} from './action';
 import {adaptOfferToClient, adaptReviewToClient, adaptUserToClient} from '../services/api';
 
+const getToken = () => ({
+  headers: {
+    'x-token': localStorage.getItem('token') ?? '',
+  },
+});
+
 export const fetchOffers = () => (dispatch, _getState, {api}) => (
   api.get(APIRoute.HOTELS)
     .then(({data}) => data.map((offer) => adaptOfferToClient(offer)))
@@ -14,7 +20,7 @@ export const checkAuth = () => (dispatch, _getState, {api}) => (
     .catch(() => {})
 );
 
-export const login = ({login: email, password}) => (dispatch, _getState, {api}) => (
+export const login = ({login: email, password}, getBadRequest) => (dispatch, _getState, {api}) => (
   api.post(APIRoute.LOGIN, {email, password})
     .then(({data}) => {
       localStorage.setItem('token', data.token);
@@ -22,6 +28,7 @@ export const login = ({login: email, password}) => (dispatch, _getState, {api}) 
     })
     .then((data) => dispatch(ActionCreator.setUser(data)))
     .then(() => dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH)))
+    .catch(() => getBadRequest())
 );
 
 export const logout = () => (dispatch, _getState, {api}) => (
@@ -54,7 +61,7 @@ export const fetchActiveOffer = (id) => (dispatch, _getState, {api}) => {
 
 export const uploadReview = (id, uploadingReview, clearForm) => (dispatch, _getState, {api}) => {
   dispatch(ActionCreator.toggleReviewUploading());
-  api.post(`${APIRoute.COMMENTS}/${id}`, uploadingReview)
+  api.post(`${APIRoute.COMMENTS}/${id}`, uploadingReview, getToken())
     .then(({data}) => data.map((review) => adaptReviewToClient(review)).slice(-MAX_REVIEWS).reverse())
     .then((data) => {
       dispatch(ActionCreator.setReviews(data));

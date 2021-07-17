@@ -49,14 +49,6 @@ function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus})
       comment: state.review,
       rating: state.rating,
     }, clearForm);
-    // reviewRef.current.value = '';
-    // ratingRefs.current[RATING_TITLES.length - state.rating].checked = false;
-    // setState({
-    //   ...state,
-    //   review: '',
-    //   rating: 0,
-    //   isDisabled: true,
-    // });
   };
 
   return (

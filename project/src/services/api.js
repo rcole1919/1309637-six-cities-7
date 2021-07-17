@@ -11,7 +11,7 @@ const HttpCode = {
 
 const token = localStorage.getItem('token') ?? '';
 
-export const createAPI = (onUnauthorized, onBadRequest, onNotFound) => {
+export const createAPI = (onUnauthorized, onNotFound) => {
   const api = axios.create({
     baseURL: BACKEND_URL,
     timeout: REQUEST_TIMEOUT,
@@ -29,12 +29,7 @@ export const createAPI = (onUnauthorized, onBadRequest, onNotFound) => {
       onUnauthorized();
     }
 
-    if (response.status === HttpCode.BAD_REQUEST) {
-      onBadRequest();
-    }
-
     if (response.status === HttpCode.NOT_FOUND) {
-      // console.log('no hotel');
       onNotFound();
     }
 

@@ -1,5 +1,11 @@
 import {ActionType} from './action';
 import {SortType, DEFAULT_CITY, AuthorizationStatus} from '../const';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import {createAPI} from '../services/api';
+import {ActionCreator} from './action';
+import {composeWithDevTools} from 'redux-devtools-extension';
+import {redirect} from '../store/middlewares/redirect';
 
 const initialState = {
   city: DEFAULT_CITY,
@@ -12,7 +18,6 @@ const initialState = {
   isActiveLoaded: true,
   isReviewUploaded: true,
   user: null,
-  isBadRequest: false,
   reviews: [],
 };
 
@@ -51,11 +56,6 @@ export const reducer = (state = initialState, action) => {
         ...state,
         user: action.payload,
       };
-    case ActionType.SET_BAD_REQUEST:
-      return {
-        ...state,
-        isBadRequest: action.payload,
-      };
     case ActionType.SET_ACTIVE_OFFER:
       return {
         ...state,
@@ -92,3 +92,15 @@ export const reducer = (state = initialState, action) => {
       return state;
   }
 };
+
+const api = createAPI(
+  () => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)),
+  () => store.dispatch(ActionCreator.finishLoading()),
+);
+
+export const store = createStore(reducer,
+  composeWithDevTools(
+    applyMiddleware(thunk.withExtraArgument({api})),
+    applyMiddleware(redirect),
+  ),
+);

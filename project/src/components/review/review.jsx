@@ -1,6 +1,8 @@
 import React from 'react';
 import {ReviewItem} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
+import dayjs from 'dayjs';
+import {MONTHS} from '../../const';
 
 function Review({review}) {
   const {
@@ -29,7 +31,7 @@ function Review({review}) {
         <p className="reviews__text">
           {comment}
         </p>
-        <time className="reviews__time" dateTime="2019-04-24">{date}</time>
+        <time className="reviews__time" dateTime={dayjs(date).format('YYYY-MM-DD')}>{dayjs(date).year()} {MONTHS[dayjs(date).month()]}</time>
       </div>
     </li>
   );

@@ -6,8 +6,9 @@ import {connect} from 'react-redux';
 import {login} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../const';
 
-function SignIn({onSubmit, authorizationStatus, isBadRequest}) {
+function SignIn({onSubmit, authorizationStatus}) {
   const [isValid, setIsValid] = useState(false);
+  const [isBadRequest, setIsBadRequest] = useState(false);
   const loginRef = useRef();
   const passwordRef = useRef();
 
@@ -17,13 +18,15 @@ function SignIn({onSubmit, authorizationStatus, isBadRequest}) {
     );
   }
 
+  const getBadRequest = () => setIsBadRequest(true);
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
     onSubmit({
       login: loginRef.current.value,
       password: passwordRef.current.value,
-    });
+    }, getBadRequest);
   };
 
   const handlePasswordChange = (evt) => {
@@ -83,17 +86,15 @@ function SignIn({onSubmit, authorizationStatus, isBadRequest}) {
 SignIn.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
-  isBadRequest: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
-  isBadRequest: state.isBadRequest,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onSubmit(authData) {
-    dispatch(login(authData));
+  onSubmit(authData, getBadRequest) {
+    dispatch(login(authData, getBadRequest));
   },
 });
 

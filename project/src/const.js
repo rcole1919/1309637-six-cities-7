@@ -8,6 +8,21 @@ export const MIN_REVIEW_LENGTH = 50;
 
 export const MAX_REVIEW_LENGTH = 300;
 
+export const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',

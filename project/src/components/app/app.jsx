@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Router as BrowserRouter, Switch, Route} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
@@ -12,8 +12,13 @@ import {AppRoute, AuthorizationStatus} from '../../const';
 import {Offers} from '../../prop-types';
 import browserHistory from '../../browser-history';
 import PrivateRoute from '../private-route/private-route';
+import {fetchOffers, checkAuth} from '../../store/api-actions';
 
-function App({cards, isDataLoaded, authorizationStatus}) {
+function App({cards, isDataLoaded, authorizationStatus, init}) {
+
+  useEffect(() => {
+    init();
+  }, [init]);
 
   if (authorizationStatus === AuthorizationStatus.UNKNOWN || !isDataLoaded) {
     return (
@@ -44,6 +49,7 @@ App.propTypes = {
   cards: Offers,
   isDataLoaded: PropTypes.bool.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
+  init: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -52,5 +58,12 @@ const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  init() {
+    dispatch(checkAuth());
+    dispatch(fetchOffers());
+  },
+});
+
 export {App};
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

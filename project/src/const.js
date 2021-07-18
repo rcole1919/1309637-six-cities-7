@@ -2,6 +2,27 @@ export const MAX_RATING = 5;
 
 export const MAX_NEARBY = 3;
 
+export const MAX_REVIEWS = 10;
+
+export const MIN_REVIEW_LENGTH = 50;
+
+export const MAX_REVIEW_LENGTH = 300;
+
+export const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',
@@ -60,6 +81,7 @@ export const APIRoute = {
   FAVORITE: '/favorite',
   LOGIN: '/login',
   LOGOUT: '/logout',
+  COMMENTS: '/comments',
 };
 
 export const AuthorizationStatus = {

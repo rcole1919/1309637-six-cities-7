@@ -11,7 +11,7 @@ const HttpCode = {
 
 const token = localStorage.getItem('token') ?? '';
 
-export const createAPI = (onUnauthorized, onBadRequest) => {
+export const createAPI = (onUnauthorized, onNotFound) => {
   const api = axios.create({
     baseURL: BACKEND_URL,
     timeout: REQUEST_TIMEOUT,
@@ -29,8 +29,8 @@ export const createAPI = (onUnauthorized, onBadRequest) => {
       onUnauthorized();
     }
 
-    if (response.status === HttpCode.BAD_REQUEST) {
-      onBadRequest();
+    if (response.status === HttpCode.NOT_FOUND) {
+      onNotFound();
     }
 
     throw err;
@@ -81,6 +81,11 @@ export const adaptOfferToClient = (offer) => {
     },
   );
 
+  delete adaptedOffer.is_favorite;
+  delete adaptedOffer.is_premium;
+  delete adaptedOffer.max_adults;
+  delete adaptedOffer.preview_image;
+
   return adaptedOffer;
 };
 
@@ -92,12 +97,34 @@ export const adaptUserToClient = (user) => {
       avatarUrl: user.avatar_url,
       email: user.email,
       id: user.id,
-      isPro: user.isPro,
+      isPro: user.is_pro,
       name: user.name,
     },
   );
 
-  localStorage.setItem('user', JSON.stringify(adaptedUser));
+  delete adaptedUser.avatar_url;
+  delete adaptedUser.is_pro;
 
   return adaptedUser;
+};
+
+export const adaptReviewToClient = (review) => {
+  const adaptedReview = Object.assign(
+    {},
+    review,
+    {
+      comment: review.comment,
+      id: review.id,
+      rating: review.rating,
+      date: review.date,
+      user: {
+        avatarUrl: review.user.avatar_url,
+        id: review.user.id,
+        isPro: review.user.is_pro,
+        name: review.user.name,
+      },
+    },
+  );
+
+  return adaptedReview;
 };

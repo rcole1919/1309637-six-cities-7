@@ -26,7 +26,7 @@ function Map({city, points, className, mapHeight, selectedPoint, markerType}) {
     const markers = [];
     if (map) {
       if (markerType === MarkerType.DYNAMIC) {
-        points.forEach((point) => {
+        points && points.forEach((point) => {
           const marker = leaflet
             .marker({
               lat: point.latitude,
@@ -41,7 +41,7 @@ function Map({city, points, className, mapHeight, selectedPoint, markerType}) {
         });
       }
       if (markerType === MarkerType.STATIC) {
-        points.forEach((point) => {
+        points && points.forEach((point) => {
           const marker = leaflet
             .marker({
               lat: point.latitude,

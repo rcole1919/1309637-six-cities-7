@@ -1,14 +1,24 @@
 import {ActionType} from './action';
 import {SortType, DEFAULT_CITY, AuthorizationStatus} from '../const';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import {createAPI} from '../services/api';
+import {ActionCreator} from './action';
+import {composeWithDevTools} from 'redux-devtools-extension';
+import {redirect} from '../store/middlewares/redirect';
 
 const initialState = {
   city: DEFAULT_CITY,
   sortType: SortType.POPULAR,
   offers: [],
+  activeOffer: null,
+  nearbyOffers: [],
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   isDataLoaded: false,
+  isActiveLoaded: true,
+  isReviewUploaded: true,
   user: null,
-  isBadRequest: false,
+  reviews: [],
 };
 
 export const reducer = (state = initialState, action) => {
@@ -46,12 +56,51 @@ export const reducer = (state = initialState, action) => {
         ...state,
         user: action.payload,
       };
-    case ActionType.SET_BAD_REQUEST:
+    case ActionType.SET_ACTIVE_OFFER:
       return {
         ...state,
-        isBadRequest: action.payload,
+        activeOffer: action.payload,
+      };
+    case ActionType.SET_NEARBY_OFFERS:
+      return {
+        ...state,
+        nearbyOffers: action.payload,
+      };
+    case ActionType.START_ACTIVE_LOADING:
+      return {
+        ...state,
+        isActiveLoaded: false,
+        nearbyOffers: [],
+        reviews: [],
+      };
+    case ActionType.FINISH_ACTIVE_LOADING:
+      return {
+        ...state,
+        isActiveLoaded: true,
+      };
+    case ActionType.SET_REVIEWS:
+      return {
+        ...state,
+        reviews: action.payload,
+      };
+    case ActionType.TOGGLE_REVIEW_UPLOADING:
+      return {
+        ...state,
+        isReviewUploaded: !state.isReviewUploaded,
       };
     default:
       return state;
   }
 };
+
+const api = createAPI(
+  () => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)),
+  () => store.dispatch(ActionCreator.finishLoading()),
+);
+
+export const store = createStore(reducer,
+  composeWithDevTools(
+    applyMiddleware(thunk.withExtraArgument({api})),
+    applyMiddleware(redirect),
+  ),
+);

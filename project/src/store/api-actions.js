@@ -2,12 +2,6 @@ import {APIRoute, AuthorizationStatus, MAX_REVIEWS} from '../const';
 import {ActionCreator} from './action';
 import {adaptOfferToClient, adaptReviewToClient, adaptUserToClient} from '../services/api';
 
-const getToken = () => ({
-  headers: {
-    'x-token': localStorage.getItem('token') ?? '',
-  },
-});
-
 export const fetchOffers = () => (dispatch, _getState, {api}) => (
   api.get(APIRoute.HOTELS)
     .then(({data}) => data.map((offer) => adaptOfferToClient(offer)))
@@ -65,7 +59,7 @@ export const fetchActiveOffer = (id) => (dispatch, _getState, {api}) => {
 
 export const uploadReview = (id, uploadingReview, clearForm) => (dispatch, _getState, {api}) => {
   dispatch(ActionCreator.toggleReviewUploading());
-  api.post(`${APIRoute.COMMENTS}/${id}`, uploadingReview, getToken())
+  api.post(`${APIRoute.COMMENTS}/${id}`, uploadingReview)
     .then(({data}) => data.map((review) => adaptReviewToClient(review)).slice(-MAX_REVIEWS).reverse())
     .then((data) => {
       dispatch(ActionCreator.setReviews(data));

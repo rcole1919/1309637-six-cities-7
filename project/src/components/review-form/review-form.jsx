@@ -23,11 +23,14 @@ function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus})
 
   const handleFieldChange = (evt) => {
     const {name, value} = evt.target;
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       [name]: value,
-      isDisabled: state.rating !== 0 && state.review.length >= MIN_REVIEW_LENGTH && state.review.length <= MAX_REVIEW_LENGTH,
-    });
+    }));
+    setState((prevState) => ({
+      ...prevState,
+      isDisabled: prevState.rating !== 0 && prevState.review.length >= MIN_REVIEW_LENGTH && prevState.review.length <= MAX_REVIEW_LENGTH,
+    }));
   };
 
   const clearForm = () => {

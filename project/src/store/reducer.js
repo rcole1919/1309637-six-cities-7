@@ -1,11 +1,5 @@
 import {ActionType} from './action';
 import {SortType, DEFAULT_CITY, AuthorizationStatus} from '../const';
-import {createStore, applyMiddleware} from 'redux';
-import thunk from 'redux-thunk';
-import {createAPI} from '../services/api';
-import {ActionCreator} from './action';
-import {composeWithDevTools} from 'redux-devtools-extension';
-import {redirect} from '../store/middlewares/redirect';
 
 const initialState = {
   city: DEFAULT_CITY,
@@ -93,14 +87,3 @@ export const reducer = (state = initialState, action) => {
   }
 };
 
-const api = createAPI(
-  () => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)),
-  () => store.dispatch(ActionCreator.finishLoading()),
-);
-
-export const store = createStore(reducer,
-  composeWithDevTools(
-    applyMiddleware(thunk.withExtraArgument({api})),
-    applyMiddleware(redirect),
-  ),
-);

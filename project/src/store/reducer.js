@@ -13,6 +13,8 @@ const initialState = {
   isReviewUploaded: true,
   user: null,
   reviews: [],
+  favoriteOffers: [],
+  isFavoriteLoaded: true,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -81,6 +83,42 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         isReviewUploaded: !state.isReviewUploaded,
+      };
+    case ActionType.TOGGLE_FAVORITE:
+      return {
+        ...state,
+        offers: [
+          ...state.offers.slice(0, state.offers.findIndex((el) => el.id === action.payload)),
+          {
+            ...state.offers[state.offers.findIndex((el) => el.id === action.payload)],
+            isFavorite: !state.offers[state.offers.findIndex((el) => el.id === action.payload)].isFavorite,
+          },
+          ...state.offers.slice(state.offers.findIndex((el) => el.id === action.payload) + 1),
+        ],
+      };
+    case ActionType.TOGGLE_ACTIVE_FAVORITE:
+      return {
+        ...state,
+        activeOffer: {
+          ...state.activeOffer,
+          isFavorite: !state.activeOffer.isFavorite,
+        },
+      };
+    case ActionType.FILL_FAVORITE_OFFERS:
+      return {
+        ...state,
+        favoriteOffers: action.payload,
+        isFavoriteLoaded: true,
+      };
+    case ActionType.TOGGLE_FAVORITE_LOADING:
+      return {
+        ...state,
+        isFavoriteLoaded: !state.isFavoriteLoaded,
+      };
+    case ActionType.REMOVE_FAVORITE:
+      return {
+        ...state,
+        favoriteOffers: state.favoriteOffers.filter((el) => el.id !== action.payload),
       };
     default:
       return state;

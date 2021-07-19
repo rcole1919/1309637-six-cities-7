@@ -1,4 +1,4 @@
-import {APIRoute, AuthorizationStatus, MAX_REVIEWS} from '../const';
+import {APIRoute, AuthorizationStatus, MAX_REVIEWS, CardType} from '../const';
 import {ActionCreator} from './action';
 import {adaptOfferToClient, adaptReviewToClient, adaptUserToClient} from '../services/api';
 
@@ -70,4 +70,20 @@ export const uploadReview = (id, uploadingReview, clearForm) => (dispatch, _getS
       dispatch(ActionCreator.toggleReviewUploading());
       clearForm();
     });
+};
+
+export const toggleOfferStatus = (id, status, cardType) => (dispatch, _getState, {api}) => {
+  api.post(`${APIRoute.FAVORITE}/${id}/${status}`)
+    .then(() => {
+      dispatch(ActionCreator.toggleFavorite(id));
+      cardType === CardType.ROOM && dispatch(ActionCreator.toggleActiveFavorite());
+      cardType === CardType.FAVORITES && dispatch(ActionCreator.removeFavorite(id));
+    });
+};
+
+export const fetchFavoriteOffers = () => (dispatch, _getState, {api}) => {
+  dispatch(ActionCreator.toggleFavoriteLoading());
+  api.get(APIRoute.FAVORITE)
+    .then(({data}) => data.map((offer) => adaptOfferToClient(offer)))
+    .then((data) => dispatch(ActionCreator.fillFavoriteOffers(data)));
 };

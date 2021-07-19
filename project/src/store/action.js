@@ -13,6 +13,11 @@ export const ActionType = {
   FINISH_ACTIVE_LOADING: 'FINISH_ACTIVE_LOADING',
   SET_REVIEWS: 'SET_REVIEWS',
   TOGGLE_REVIEW_UPLOADING: 'TOGGLE_REVIEW_UPLOADING',
+  TOGGLE_FAVORITE: 'TOGGLE_FAVORITE',
+  TOGGLE_ACTIVE_FAVORITE: 'TOGGLE_ACTIVE_FAVORITE',
+  FILL_FAVORITE_OFFERS: 'FILL_FAVORITE_OFFERS',
+  TOGGLE_FAVORITE_LOADING: 'TOGGLE_FAVORITE_LOADING',
+  REMOVE_FAVORITE: 'REMOVE_FAVORITE',
 };
 
 export const ActionCreator = {
@@ -63,5 +68,23 @@ export const ActionCreator = {
   }),
   toggleReviewUploading: () => ({
     type: ActionType.TOGGLE_REVIEW_UPLOADING,
+  }),
+  toggleFavorite: (id) => ({
+    type: ActionType.TOGGLE_FAVORITE,
+    payload: id,
+  }),
+  toggleActiveFavorite: () => ({
+    type: ActionType.TOGGLE_ACTIVE_FAVORITE,
+  }),
+  fillFavoriteOffers: (offers) => ({
+    type: ActionType.FILL_FAVORITE_OFFERS,
+    payload: offers,
+  }),
+  toggleFavoriteLoading: () => ({
+    type: ActionType.TOGGLE_FAVORITE_LOADING,
+  }),
+  removeFavorite: (id) => ({
+    type: ActionType.REMOVE_FAVORITE,
+    payload: id,
   }),
 };

@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {useHistory} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Header from '../header/header';
 import NotFound from '../not-found/not-found';
@@ -9,18 +10,19 @@ import CardList from '../card-list/card-list';
 import Map from '../map/map';
 import {OfferItem, Offers, Reviews} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
-import {MapType, CardType, AuthorizationStatus, MarkerType} from '../../const';
+import {MapType, CardType, AuthorizationStatus, MarkerType, AppRoute} from '../../const';
 import {connect} from 'react-redux';
-import {fetchActiveOffer} from '../../store/api-actions';
+import {fetchActiveOffer, toggleOfferStatus} from '../../store/api-actions';
 
 function Room(props) {
+  const hystory = useHistory();
   const cardId = props.match.params.id;
-  const {isActiveLoaded, onfetchActiveOffer, activeOffer, nearbyOffers, reviews} = props;
+  const {isActiveLoaded, onFetchActiveOffer, activeOffer, nearbyOffers, reviews, authorizationStatus, onToggleFavorite} = props;
   useEffect(() => {
     if (activeOffer === null || activeOffer.id !== Number(cardId)) {
-      onfetchActiveOffer(cardId);
+      onFetchActiveOffer(cardId);
     }
-  }, [cardId, onfetchActiveOffer, activeOffer]);
+  }, [cardId, onFetchActiveOffer, activeOffer]);
 
   if (!isActiveLoaded) {
     return (
@@ -37,6 +39,7 @@ function Room(props) {
   const {
     images,
     isPremium,
+    isFavorite,
     title,
     rating,
     bedrooms,
@@ -81,7 +84,18 @@ function Room(props) {
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className="property__bookmark-button button" type="button">
+                <button
+                  className={`property__bookmark-button button ${isFavorite && 'property__bookmark-button--active'}`}
+                  type="button"
+                  onClick={() => {
+                    if (authorizationStatus !== AuthorizationStatus.AUTH) {
+                      hystory.push(AppRoute.SIGN_IN);
+                      return;
+                    }
+                    const newStatus = isFavorite ? 0 : 1;
+                    onToggleFavorite(Number(cardId), newStatus);
+                  }}
+                >
                   <svg className="property__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
@@ -190,10 +204,11 @@ Room.propTypes = {
   }),
   authorizationStatus: PropTypes.string.isRequired,
   isActiveLoaded: PropTypes.bool.isRequired,
-  onfetchActiveOffer: PropTypes.func.isRequired,
+  onFetchActiveOffer: PropTypes.func.isRequired,
   activeOffer: OfferItem,
   nearbyOffers: Offers,
   reviews: Reviews,
+  onToggleFavorite: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -205,8 +220,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onfetchActiveOffer(id) {
+  onFetchActiveOffer(id) {
     dispatch(fetchActiveOffer(id));
+  },
+  onToggleFavorite(id, status) {
+    dispatch(toggleOfferStatus(id, status, CardType.ROOM));
   },
 });
 

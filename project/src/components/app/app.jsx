@@ -35,7 +35,7 @@ function App({cards, isDataLoaded, authorizationStatus, init}) {
         <Route exact path={AppRoute.SIGN_IN}>
           <SignIn />
         </Route>
-        <PrivateRoute exact path={AppRoute.FAVORITES} render={(props) => <Favorites {...props} cards={cards} /> } />
+        <PrivateRoute exact path={AppRoute.FAVORITES} render={(props) => <Favorites {...props} /*cards={cards.filter((el) => el.isFavorite)}*/ /> } />
         <Route exact path={AppRoute.ROOM}  render={(props) => <Room {...props} cards={cards} /> } />
         <Route>
           <NotFound />

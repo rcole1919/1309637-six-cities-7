@@ -1,17 +1,20 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {OfferItem} from '../../prop-types';
-import {CardType, AppRoute} from '../../const';
+import {CardType, AppRoute, AuthorizationStatus} from '../../const';
 import {getRatingPercent} from '../../utils';
+import { connect } from 'react-redux';
+import { toggleOfferStatus } from '../../store/api-actions';
 
-function Card({card, cardType, onListItemHover}) {
+function Card({card, cardType, onListItemHover, onToggleFavorite, authorizationStatus}) {
   const {host: {name}, isPremium, isFavorite, previewImage, price, rating, type, id} = card;
 
   const [offer, setOffer] = useState({
     isActive: false,
-    isFavorite: isFavorite,
   });
+
+  const hystory = useHistory();
 
   const premiumMark = cardType === CardType.MAIN && isPremium && (
     <div className="place-card__mark">
@@ -64,12 +67,14 @@ function Card({card, cardType, onListItemHover}) {
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
-            className={`place-card__bookmark-button button ${offer.isFavorite && 'place-card__bookmark-button--active'}`} type="button"
+            className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`} type="button"
             onClick={() => {
-              setOffer({
-                ...offer,
-                isFavorite: !offer.isFavorite,
-              });
+              if (authorizationStatus !== AuthorizationStatus.AUTH) {
+                hystory.push(AppRoute.SIGN_IN);
+                return;
+              }
+              const newStatus = isFavorite ? 0 : 1;
+              onToggleFavorite(id, newStatus, cardType);
             }}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -97,7 +102,20 @@ Card.propTypes = {
   card: OfferItem,
   cardType: PropTypes.string.isRequired,
   onListItemHover: PropTypes.func,
+  onToggleFavorite: PropTypes.func.isRequired,
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
-export default Card;
+const mapStateToProps = (state) => ({
+  authorizationStatus: state.authorizationStatus,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onToggleFavorite(id, status, cardType) {
+    dispatch(toggleOfferStatus(id, status, cardType));
+  },
+});
+
+export {Card};
+export default connect(mapStateToProps, mapDispatchToProps)(Card);
 

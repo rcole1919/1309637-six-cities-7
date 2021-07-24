@@ -8,6 +8,7 @@ import {fetchFavoriteOffers} from '../../store/api-actions';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Loading from '../loading/loading';
+import {getFavoriteOffers, getLoadedFavoriteOffersStatus} from '../../store/favorite/selectors';
 
 function Favorites({cards, onFetchFavoriteOffers,isFavoriteLoaded}) {
   useEffect(() => {
@@ -78,8 +79,8 @@ Favorites.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  isFavoriteLoaded: state.isFavoriteLoaded,
-  cards: state.favoriteOffers,
+  isFavoriteLoaded: getLoadedFavoriteOffersStatus(state),
+  cards: getFavoriteOffers(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -6,6 +6,7 @@ import {CardType, AppRoute, AuthorizationStatus} from '../../const';
 import {getRatingPercent} from '../../utils';
 import { connect } from 'react-redux';
 import { toggleOfferStatus } from '../../store/api-actions';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
 function Card({card, cardType, onListItemHover, onToggleFavorite, authorizationStatus}) {
   const {host: {name}, isPremium, isFavorite, previewImage, price, rating, type, id} = card;
@@ -107,7 +108,7 @@ Card.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

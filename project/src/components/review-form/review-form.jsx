@@ -3,6 +3,8 @@ import {MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, AuthorizationStatus} from '../../c
 import {connect} from 'react-redux';
 import {uploadReview} from '../../store/api-actions';
 import PropTypes from 'prop-types';
+import {getAuthorizationStatus} from '../../store/user/selectors';
+import {getLoadedReviewStatus} from '../../store/room/selectors';
 
 function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus}) {
   const RATING_TITLES = [
@@ -103,8 +105,8 @@ ReviewForm.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  isReviewUploaded: state.isReviewUploaded,
-  authorizationStatus: state.authorizationStatus,
+  isReviewUploaded: getLoadedReviewStatus(state),
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

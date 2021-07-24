@@ -5,6 +5,7 @@ import {AppRoute, AuthorizationStatus } from '../../const';
 import {connect} from 'react-redux';
 import {logout} from '../../store/api-actions';
 import {authInfo} from '../../prop-types';
+import {getAuthorizationStatus, getUser} from '../../store/user/selectors';
 
 function NavList({onClick, authorizationStatus, user}) {
   const handleLogoutClick = () => {
@@ -49,8 +50,8 @@ NavList.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
-  user: state.user,
+  authorizationStatus: getAuthorizationStatus(state),
+  user: getUser(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

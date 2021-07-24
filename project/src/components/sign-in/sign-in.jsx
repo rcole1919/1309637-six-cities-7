@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {login} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../const';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
 function SignIn({onSubmit, authorizationStatus}) {
   const [isValid, setIsValid] = useState(false);
@@ -20,13 +21,18 @@ function SignIn({onSubmit, authorizationStatus}) {
 
   const getBadRequest = () => setIsBadRequest(true);
 
+  const getRoomIdForBack = () => {
+    const params = (new URL(document.location)).searchParams;
+    return params.get('back');
+  };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
     onSubmit({
       login: loginRef.current.value,
       password: passwordRef.current.value,
-    }, getBadRequest);
+    }, getBadRequest, getRoomIdForBack);
   };
 
   const handlePasswordChange = (evt) => {
@@ -89,12 +95,12 @@ SignIn.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onSubmit(authData, getBadRequest) {
-    dispatch(login(authData, getBadRequest));
+  onSubmit(authData, getBadRequest, getRoomIdForBack) {
+    dispatch(login(authData, getBadRequest, getRoomIdForBack));
   },
 });
 

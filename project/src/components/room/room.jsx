@@ -13,6 +13,8 @@ import {getRatingPercent} from '../../utils';
 import {MapType, CardType, AuthorizationStatus, MarkerType, AppRoute} from '../../const';
 import {connect} from 'react-redux';
 import {fetchActiveOffer, toggleOfferStatus} from '../../store/api-actions';
+import {getAuthorizationStatus} from '../../store/user/selectors';
+import {getLoadedActiveRoomStatus, getActiveOffer, getNearbyOffers, getReviews} from '../../store/room/selectors';
 
 function Room(props) {
   const hystory = useHistory();
@@ -89,7 +91,7 @@ function Room(props) {
                   type="button"
                   onClick={() => {
                     if (authorizationStatus !== AuthorizationStatus.AUTH) {
-                      hystory.push(AppRoute.SIGN_IN);
+                      hystory.push(`${AppRoute.SIGN_IN}?back=${cardId}`);
                       return;
                     }
                     const newStatus = isFavorite ? 0 : 1;
@@ -212,11 +214,11 @@ Room.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
-  isActiveLoaded: state.isActiveLoaded,
-  activeOffer: state.activeOffer,
-  nearbyOffers: state.nearbyOffers,
-  reviews: state.reviews,
+  authorizationStatus: getAuthorizationStatus(state),
+  isActiveLoaded: getLoadedActiveRoomStatus(state),
+  activeOffer: getActiveOffer(state),
+  nearbyOffers: getNearbyOffers(state),
+  reviews: getReviews(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

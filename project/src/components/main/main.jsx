@@ -6,10 +6,11 @@ import CityList from '../city-list/city-list';
 import Sort from '../sort/sort';
 import Map from '../map/map';
 import {connect} from 'react-redux';
-import {ActionCreator} from '../../store/action';
+import {changeCity, sortOffers} from '../../store/action';
 import {Offers} from '../../prop-types';
 import {CardType, MapType, MarkerType} from '../../const';
 import {sort} from '../../utils';
+import {getOffers, getCity, getSortType} from '../../store/main/selectors';
 
 function Main({cards, city, onCityChange, sortType, onSortTypeClick}) {
   const [selectedPoint, setSelectedPoint] = useState({});
@@ -95,17 +96,17 @@ Main.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  city: state.city,
-  sortType: state.sortType,
-  cards: state.offers,
+  city: getCity(state),
+  sortType: getSortType(state),
+  cards: getOffers(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onCityChange(currentCity) {
-    dispatch(ActionCreator.changeCity(currentCity));
+    dispatch(changeCity(currentCity));
   },
   onSortTypeClick(currentSortType) {
-    dispatch(ActionCreator.sortOffers(currentSortType));
+    dispatch(sortOffers(currentSortType));
   },
 });
 

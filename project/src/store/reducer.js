@@ -39,7 +39,6 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         authorizationStatus: action.payload,
-        isBadRequest: action.payload === AuthorizationStatus.AUTH && false,
       };
     case ActionType.LOGOUT:
       return {

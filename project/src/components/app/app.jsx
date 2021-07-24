@@ -9,12 +9,13 @@ import Favorites from '../favorites/favorites';
 import Room from '../room/room';
 import NotFound from '../not-found/not-found';
 import {AppRoute, AuthorizationStatus} from '../../const';
-import {Offers} from '../../prop-types';
 import browserHistory from '../../browser-history';
 import PrivateRoute from '../private-route/private-route';
 import {fetchOffers, checkAuth} from '../../store/api-actions';
+import {getLoadedDataStatus} from '../../store/main/selectors';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
-function App({cards, isDataLoaded, authorizationStatus, init}) {
+function App({isDataLoaded, authorizationStatus, init}) {
 
   useEffect(() => {
     init();
@@ -35,8 +36,8 @@ function App({cards, isDataLoaded, authorizationStatus, init}) {
         <Route exact path={AppRoute.SIGN_IN}>
           <SignIn />
         </Route>
-        <PrivateRoute exact path={AppRoute.FAVORITES} render={(props) => <Favorites {...props} /*cards={cards.filter((el) => el.isFavorite)}*/ /> } />
-        <Route exact path={AppRoute.ROOM}  render={(props) => <Room {...props} cards={cards} /> } />
+        <PrivateRoute exact path={AppRoute.FAVORITES} render={(props) => <Favorites {...props} /> } />
+        <Route exact path={AppRoute.ROOM}  render={(props) => <Room {...props} /> } />
         <Route>
           <NotFound />
         </Route>
@@ -46,16 +47,14 @@ function App({cards, isDataLoaded, authorizationStatus, init}) {
 }
 
 App.propTypes = {
-  cards: Offers,
   isDataLoaded: PropTypes.bool.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
   init: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  cards: state.offers,
-  isDataLoaded: state.isDataLoaded,
-  authorizationStatus: state.authorizationStatus,
+  isDataLoaded: getLoadedDataStatus(state),
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

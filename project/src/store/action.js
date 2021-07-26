@@ -17,6 +17,7 @@ export const ActionType = {
   TOGGLE_REVIEW_UPLOADING: 'TOGGLE_REVIEW_UPLOADING',
   TOGGLE_FAVORITE: 'TOGGLE_FAVORITE',
   TOGGLE_ACTIVE_FAVORITE: 'TOGGLE_ACTIVE_FAVORITE',
+  TOGGLE_NEARBY_FAVORITE: 'TOGGLE_NEARBY_FAVORITE',
   FILL_FAVORITE_OFFERS: 'FILL_FAVORITE_OFFERS',
   TOGGLE_FAVORITE_LOADING: 'TOGGLE_FAVORITE_LOADING',
   REMOVE_FAVORITE: 'REMOVE_FAVORITE',
@@ -70,7 +71,13 @@ export const toggleFavorite = createAction(ActionType.TOGGLE_FAVORITE, (id) => (
   payload: id,
 }));
 
-export const toggleActiveFavorite = createAction(ActionType.TOGGLE_ACTIVE_FAVORITE);
+export const toggleActiveFavorite = createAction(ActionType.TOGGLE_ACTIVE_FAVORITE, (id) => ({
+  payload: id,
+}));
+
+export const toggleNearbyFavorite = createAction(ActionType.TOGGLE_NEARBY_FAVORITE, (id) => ({
+  payload: id,
+}));
 
 export const fillFavoriteOffers = createAction(ActionType.FILL_FAVORITE_OFFERS, (offers) => ({
   payload: offers,

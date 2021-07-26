@@ -1,5 +1,5 @@
 import {APIRoute, AuthorizationStatus, MAX_REVIEWS, CardType, AppRoute} from '../const';
-import {fillOffers, setUser, requireAuthorization, signOut, startLoading, setActiveOffer, setNearbyOffers, setReviews, finishLoading, toggleReviewUploading, toggleFavorite, toggleActiveFavorite, removeFavorite, toggleFavoriteLoading, fillFavoriteOffers, redirectToRoute} from './action';
+import {fillOffers, setUser, requireAuthorization, signOut, startLoading, setActiveOffer, setNearbyOffers, setReviews, finishLoading, toggleReviewUploading, toggleFavorite, toggleActiveFavorite, toggleNearbyFavorite, removeFavorite, toggleFavoriteLoading, fillFavoriteOffers, redirectToRoute} from './action';
 import {adaptOfferToClient, adaptReviewToClient, adaptUserToClient} from '../services/api';
 
 export const fetchOffers = () => (dispatch, _getState, {api}) => (
@@ -78,7 +78,8 @@ export const toggleOfferStatus = (id, status, cardType) => (dispatch, _getState,
   api.post(`${APIRoute.FAVORITE}/${id}/${status}`)
     .then(() => {
       dispatch(toggleFavorite(id));
-      cardType === CardType.ROOM && dispatch(toggleActiveFavorite());
+      dispatch(toggleActiveFavorite(id));
+      dispatch(toggleNearbyFavorite(id));
       cardType === CardType.FAVORITES && dispatch(removeFavorite(id));
     });
 };

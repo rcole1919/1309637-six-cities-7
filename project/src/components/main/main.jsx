@@ -1,18 +1,28 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 import Header from '../header/header';
 import CardList from '../card-list/card-list';
 import CityList from '../city-list/city-list';
 import Sort from '../sort/sort';
 import Map from '../map/map';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {changeCity, sortOffers} from '../../store/action';
-import {Offers} from '../../prop-types';
 import {CardType, MapType, MarkerType} from '../../const';
 import {sort} from '../../utils';
 import {getOffers, getCity, getSortType} from '../../store/main/selectors';
 
-function Main({cards, city, onCityChange, sortType, onSortTypeClick}) {
+function Main() {
+  const city = useSelector(getCity);
+  const sortType = useSelector(getSortType);
+  const cards = useSelector(getOffers);
+
+  const dispatch = useDispatch();
+
+  const onCityChange = (currentCity) => {
+    dispatch(changeCity(currentCity));
+  };
+  const onSortTypeClick = (currentSortType) => {
+    dispatch(sortOffers(currentSortType));
+  };
   const [selectedPoint, setSelectedPoint] = useState({});
   if (cards.length > 0) {
     const filtredCards = sort[sortType](cards.filter((el) => el.city.name === city));
@@ -87,28 +97,4 @@ function Main({cards, city, onCityChange, sortType, onSortTypeClick}) {
   );
 }
 
-Main.propTypes = {
-  cards: Offers,
-  city: PropTypes.string.isRequired,
-  sortType: PropTypes.string.isRequired,
-  onCityChange: PropTypes.func.isRequired,
-  onSortTypeClick: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  city: getCity(state),
-  sortType: getSortType(state),
-  cards: getOffers(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onCityChange(currentCity) {
-    dispatch(changeCity(currentCity));
-  },
-  onSortTypeClick(currentSortType) {
-    dispatch(sortOffers(currentSortType));
-  },
-});
-
-export {Main};
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;

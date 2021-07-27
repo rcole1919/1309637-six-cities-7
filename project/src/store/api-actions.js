@@ -59,7 +59,7 @@ export const fetchActiveOffer = (id) => (dispatch, _getState, {api}) => {
     .then(() => dispatch(finishLoading()));
 };
 
-export const uploadReview = (id, uploadingReview, clearForm) => (dispatch, _getState, {api}) => {
+export const uploadReview = (id, uploadingReview, clearForm, showError) => (dispatch, _getState, {api}) => {
   dispatch(toggleReviewUploading());
   api.post(`${APIRoute.COMMENTS}/${id}`, uploadingReview)
     .then(({data}) => data.map((review) => adaptReviewToClient(review)).slice(-MAX_REVIEWS).reverse())
@@ -70,7 +70,7 @@ export const uploadReview = (id, uploadingReview, clearForm) => (dispatch, _getS
     })
     .catch(() => {
       dispatch(toggleReviewUploading());
-      clearForm();
+      showError();
     });
 };
 

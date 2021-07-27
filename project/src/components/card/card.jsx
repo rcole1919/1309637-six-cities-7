@@ -4,12 +4,19 @@ import {Link, useHistory} from 'react-router-dom';
 import {OfferItem} from '../../prop-types';
 import {CardType, AppRoute, AuthorizationStatus} from '../../const';
 import {getRatingPercent} from '../../utils';
-import { connect } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import { toggleOfferStatus } from '../../store/api-actions';
 import {getAuthorizationStatus} from '../../store/user/selectors';
 
-function Card({card, cardType, onListItemHover, onToggleFavorite, authorizationStatus}) {
+function Card({card, cardType, onListItemHover}) {
   const {host: {name}, isPremium, isFavorite, previewImage, price, rating, type, id} = card;
+
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+
+  const dispatch = useDispatch();
+  const onToggleFavorite = (cardId, status, offerType) => {
+    dispatch(toggleOfferStatus(cardId, status, offerType));
+  };
 
   const [offer, setOffer] = useState({
     isActive: false,
@@ -57,9 +64,7 @@ function Card({card, cardType, onListItemHover, onToggleFavorite, authorizationS
     >
       {premiumMark}
       <div className={`${wrapperClass} place-card__image-wrapper`}>
-        <Link to={`${AppRoute.ROOM_LINK}${id}`}>
-          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
-        </Link>
+        <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -103,20 +108,6 @@ Card.propTypes = {
   card: OfferItem,
   cardType: PropTypes.string.isRequired,
   onListItemHover: PropTypes.func,
-  onToggleFavorite: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onToggleFavorite(id, status, cardType) {
-    dispatch(toggleOfferStatus(id, status, cardType));
-  },
-});
-
-export {Card};
-export default connect(mapStateToProps, mapDispatchToProps)(Card);
-
+export default Card;

@@ -1,15 +1,17 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {AppRoute, AuthorizationStatus } from '../../const';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {logout} from '../../store/api-actions';
-import {authInfo} from '../../prop-types';
 import {getAuthorizationStatus, getUser} from '../../store/user/selectors';
 
-function NavList({onClick, authorizationStatus, user}) {
-  const handleLogoutClick = () => {
-    onClick();
+function NavList() {
+  const user = useSelector(getUser);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+
+  const dispatch = useDispatch();
+  const onSignOutClick = () => {
+    dispatch(logout());
   };
 
   if (authorizationStatus === AuthorizationStatus.AUTH) {
@@ -23,7 +25,7 @@ function NavList({onClick, authorizationStatus, user}) {
           </Link>
         </li>
         <li className="header__nav-item">
-          <div onClick={handleLogoutClick} tabIndex="0" style={{cursor: 'pointer'}} className="header__nav-link">
+          <div onClick={onSignOutClick} tabIndex="0" style={{cursor: 'pointer'}} className="header__nav-link">
             <span className="header__signout">Sign out</span>
           </div>
         </li>
@@ -43,22 +45,4 @@ function NavList({onClick, authorizationStatus, user}) {
   );
 }
 
-NavList.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
-  user: authInfo,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-  user: getUser(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onClick() {
-    dispatch(logout());
-  },
-});
-
-export {NavList};
-export default connect(mapStateToProps, mapDispatchToProps)(NavList);
+export default NavList;

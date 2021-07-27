@@ -2,18 +2,21 @@ import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import Header from '../header/header';
 import CardList from '../card-list/card-list';
-import {Offers} from '../../prop-types';
 import {CardType, AppRoute, CITIES} from '../../const';
 import {fetchFavoriteOffers} from '../../store/api-actions';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector, useDispatch} from 'react-redux';
 import Loading from '../loading/loading';
 import {getFavoriteOffers, getLoadedFavoriteOffersStatus} from '../../store/favorite/selectors';
 
-function Favorites({cards, onFetchFavoriteOffers,isFavoriteLoaded}) {
+function Favorites() {
+  const cards = useSelector(getFavoriteOffers);
+  const isFavoriteLoaded = useSelector(getLoadedFavoriteOffersStatus);
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    onFetchFavoriteOffers();
-  }, [onFetchFavoriteOffers]);
+    dispatch(fetchFavoriteOffers());
+  }, [dispatch]);
 
   if (!isFavoriteLoaded) {
     return (
@@ -72,22 +75,4 @@ function Favorites({cards, onFetchFavoriteOffers,isFavoriteLoaded}) {
   );
 }
 
-Favorites.propTypes = {
-  cards: Offers,
-  isFavoriteLoaded: PropTypes.bool.isRequired,
-  onFetchFavoriteOffers: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  isFavoriteLoaded: getLoadedFavoriteOffersStatus(state),
-  cards: getFavoriteOffers(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onFetchFavoriteOffers() {
-    dispatch(fetchFavoriteOffers());
-  },
-});
-
-export {Favorites};
-export default connect(mapStateToProps, mapDispatchToProps)(Favorites);
+export default Favorites;

@@ -7,6 +7,7 @@ import SignIn from '../sign-in/sign-in';
 import Favorites from '../favorites/favorites';
 import Room from '../room/room';
 import NotFound from '../not-found/not-found';
+import ServerError from '../server-error/server-error';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import browserHistory from '../../browser-history';
 import PrivateRoute from '../private-route/private-route';
@@ -42,6 +43,9 @@ function App() {
         </Route>
         <PrivateRoute exact path={AppRoute.FAVORITES} render={(props) => <Favorites {...props} /> } />
         <Route exact path={AppRoute.ROOM}  render={(props) => <Room {...props} /> } />
+        <Route exact path={AppRoute.SERVER_ERROR}>
+          <ServerError />
+        </Route>
         <Route>
           <NotFound />
         </Route>

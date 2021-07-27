@@ -8,10 +8,9 @@ import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
-import {OfferItem, Offers, Reviews} from '../../prop-types';
 import {getRatingPercent} from '../../utils';
-import {MapType, CardType, AuthorizationStatus, MarkerType, AppRoute} from '../../const';
-import {connect} from 'react-redux';
+import {MapType, CardType, AuthorizationStatus, MarkerType, AppRoute, BACK_GET_PARAM} from '../../const';
+import {useSelector, useDispatch} from 'react-redux';
 import {fetchActiveOffer, toggleOfferStatus} from '../../store/api-actions';
 import {getAuthorizationStatus} from '../../store/user/selectors';
 import {getLoadedActiveRoomStatus, getActiveOffer, getNearbyOffers, getReviews} from '../../store/room/selectors';
@@ -19,12 +18,24 @@ import {getLoadedActiveRoomStatus, getActiveOffer, getNearbyOffers, getReviews} 
 function Room(props) {
   const hystory = useHistory();
   const cardId = props.match.params.id;
-  const {isActiveLoaded, onFetchActiveOffer, activeOffer, nearbyOffers, reviews, authorizationStatus, onToggleFavorite} = props;
+
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const isActiveLoaded = useSelector(getLoadedActiveRoomStatus);
+  const activeOffer = useSelector(getActiveOffer);
+  const nearbyOffers = useSelector(getNearbyOffers);
+  const reviews = useSelector(getReviews);
+
+  const dispatch = useDispatch();
+
+  const onToggleFavorite = (id, status) => {
+    dispatch(toggleOfferStatus(id, status, CardType.ROOM));
+  };
+
   useEffect(() => {
     if (activeOffer === null || activeOffer.id !== Number(cardId)) {
-      onFetchActiveOffer(cardId);
+      dispatch(fetchActiveOffer(cardId));
     }
-  }, [cardId, onFetchActiveOffer, activeOffer]);
+  }, [cardId, dispatch, activeOffer]);
 
   if (!isActiveLoaded) {
     return (
@@ -91,7 +102,7 @@ function Room(props) {
                   type="button"
                   onClick={() => {
                     if (authorizationStatus !== AuthorizationStatus.AUTH) {
-                      hystory.push(`${AppRoute.SIGN_IN}?back=${cardId}`);
+                      hystory.push(`${AppRoute.SIGN_IN}?${BACK_GET_PARAM}=${cardId}`);
                       return;
                     }
                     const newStatus = isFavorite ? 0 : 1;
@@ -166,7 +177,7 @@ function Room(props) {
                   <ReviewList reviews={reviews} />
                 }
                 {
-                  props.authorizationStatus === AuthorizationStatus.AUTH &&
+                  authorizationStatus === AuthorizationStatus.AUTH &&
                   <ReviewForm id={cardId} />
                 }
               </section>
@@ -204,31 +215,6 @@ Room.propTypes = {
       id: PropTypes.string.isRequired,
     }),
   }),
-  authorizationStatus: PropTypes.string.isRequired,
-  isActiveLoaded: PropTypes.bool.isRequired,
-  onFetchActiveOffer: PropTypes.func.isRequired,
-  activeOffer: OfferItem,
-  nearbyOffers: Offers,
-  reviews: Reviews,
-  onToggleFavorite: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-  isActiveLoaded: getLoadedActiveRoomStatus(state),
-  activeOffer: getActiveOffer(state),
-  nearbyOffers: getNearbyOffers(state),
-  reviews: getReviews(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onFetchActiveOffer(id) {
-    dispatch(fetchActiveOffer(id));
-  },
-  onToggleFavorite(id, status) {
-    dispatch(toggleOfferStatus(id, status, CardType.ROOM));
-  },
-});
-
-export {Room};
-export default connect(mapStateToProps, mapDispatchToProps)(Room);
+export default Room;

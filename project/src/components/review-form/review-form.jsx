@@ -1,24 +1,27 @@
 import React, {useState, useRef} from 'react';
-import {MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, AuthorizationStatus} from '../../const';
-import {connect} from 'react-redux';
+import {MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, RATING_TITLES, AuthorizationStatus} from '../../const';
+import {useSelector, useDispatch} from 'react-redux';
 import {uploadReview} from '../../store/api-actions';
 import PropTypes from 'prop-types';
 import {getAuthorizationStatus} from '../../store/user/selectors';
 import {getLoadedReviewStatus} from '../../store/room/selectors';
 
-function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus}) {
-  const RATING_TITLES = [
-    'perfect',
-    'good',
-    'not bad',
-    'badly',
-    'terribly',
-  ];
+function ReviewForm({id}) {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const isReviewUploaded = useSelector(getLoadedReviewStatus);
+
+  const dispatch = useDispatch();
+  const onUploadReview = (cardId, uploadingReview, clear, error) => {
+    dispatch(uploadReview(cardId, uploadingReview, clear, error));
+  };
+
   const [state, setState] = useState({
     rating: 0,
     review: '',
     isDisabled: false,
   });
+
+  const [isBadRequest, setIsBadRequest] = useState(false);
 
   const reviewRef = useRef();
   const ratingRefs = useRef([]);
@@ -45,7 +48,12 @@ function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus})
         rating: 0,
         isDisabled: true,
       });
+      setIsBadRequest(false);
     }
+  };
+
+  const showError = () => {
+    setIsBadRequest(true);
   };
 
   const handleSubmitFrom = (evt) => {
@@ -53,7 +61,7 @@ function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus})
     onUploadReview(id, {
       comment: state.review,
       rating: state.rating,
-    }, clearForm);
+    }, clearForm, showError);
   };
 
   return (
@@ -91,7 +99,7 @@ function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus})
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={!state.isDisabled || !isReviewUploaded}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={!state.isDisabled || !isReviewUploaded}>{isBadRequest ? 'Something wrong' : 'Submit'}</button>
       </div>
     </form>
   );
@@ -99,21 +107,6 @@ function ReviewForm({id, onUploadReview, isReviewUploaded, authorizationStatus})
 
 ReviewForm.propTypes = {
   id: PropTypes.string.isRequired,
-  onUploadReview: PropTypes.func.isRequired,
-  isReviewUploaded: PropTypes.bool.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  isReviewUploaded: getLoadedReviewStatus(state),
-  authorizationStatus: getAuthorizationStatus(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onUploadReview(id, uploadingReview, clearForm) {
-    dispatch(uploadReview(id, uploadingReview, clearForm));
-  },
-});
-
-export {ReviewForm};
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewForm);
+export default ReviewForm;

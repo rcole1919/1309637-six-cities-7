@@ -1,13 +1,19 @@
 import React, {useRef, useState} from 'react';
 import {Redirect} from 'react-router-dom';
 import Header from '../header/header';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {login} from '../../store/api-actions';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {AppRoute, AuthorizationStatus, BACK_GET_PARAM} from '../../const';
 import {getAuthorizationStatus} from '../../store/user/selectors';
 
-function SignIn({onSubmit, authorizationStatus}) {
+function SignIn() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+
+  const dispatch = useDispatch();
+  const onSubmit = (authData, getRequest, getRoomId) => {
+    dispatch(login(authData, getRequest, getRoomId));
+  };
+
   const [isValid, setIsValid] = useState(false);
   const [isBadRequest, setIsBadRequest] = useState(false);
   const loginRef = useRef();
@@ -23,7 +29,7 @@ function SignIn({onSubmit, authorizationStatus}) {
 
   const getRoomIdForBack = () => {
     const params = (new URL(document.location)).searchParams;
-    return params.get('back');
+    return params.get(BACK_GET_PARAM);
   };
 
   const handleSubmit = (evt) => {
@@ -89,21 +95,4 @@ function SignIn({onSubmit, authorizationStatus}) {
   );
 }
 
-SignIn.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onSubmit(authData, getBadRequest, getRoomIdForBack) {
-    dispatch(login(authData, getBadRequest, getRoomIdForBack));
-  },
-});
-
-export {SignIn};
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
-
+export default SignIn;

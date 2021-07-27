@@ -8,6 +8,8 @@ export const MIN_REVIEW_LENGTH = 50;
 
 export const MAX_REVIEW_LENGTH = 300;
 
+export const BACK_GET_PARAM = 'back';
+
 export const MONTHS = [
   'January',
   'February',
@@ -23,12 +25,21 @@ export const MONTHS = [
   'December',
 ];
 
+export const RATING_TITLES = [
+  'perfect',
+  'good',
+  'not bad',
+  'badly',
+  'terribly',
+];
+
 export const AppRoute = {
   MAIN: '/',
   SIGN_IN: '/login',
   FAVORITES: '/favorites',
   ROOM: '/offer/:id',
   ROOM_LINK: '/offer/',
+  SERVER_ERROR: '/500',
 };
 
 export const DEFAULT_ICON_URL = 'img/pin.svg';

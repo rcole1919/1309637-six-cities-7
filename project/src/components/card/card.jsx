@@ -2,14 +2,14 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Link, useHistory} from 'react-router-dom';
 import {OfferItem} from '../../prop-types';
-import {CardType, AppRoute, AuthorizationStatus} from '../../const';
+import {CardType, AppRoute, AuthorizationStatus, ADD_FAVORITE_STATUS, REMOVE_FAVORITE_STATUS} from '../../const';
 import {getRatingPercent} from '../../utils';
 import {useSelector, useDispatch} from 'react-redux';
 import { toggleOfferStatus } from '../../store/api-actions';
 import {getAuthorizationStatus} from '../../store/user/selectors';
 
 function Card({card, cardType, onListItemHover}) {
-  const {host: {name}, isPremium, isFavorite, previewImage, price, rating, type, id} = card;
+  const {title, isPremium, isFavorite, previewImage, price, rating, type, id} = card;
 
   const authorizationStatus = useSelector(getAuthorizationStatus);
 
@@ -22,7 +22,7 @@ function Card({card, cardType, onListItemHover}) {
     isActive: false,
   });
 
-  const hystory = useHistory();
+  const history = useHistory();
 
   const premiumMark = cardType === CardType.MAIN && isPremium && (
     <div className="place-card__mark">
@@ -52,14 +52,14 @@ function Card({card, cardType, onListItemHover}) {
           ...offer,
           isActive: true,
         });
-        onListItemHover && onListItemHover(id);
+        onListItemHover(id);
       }}
       onMouseLeave={() => {
         setOffer({
           ...offer,
           isActive: false,
         });
-        onListItemHover && onListItemHover();
+        onListItemHover();
       }}
     >
       {premiumMark}
@@ -76,10 +76,10 @@ function Card({card, cardType, onListItemHover}) {
             className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`} type="button"
             onClick={() => {
               if (authorizationStatus !== AuthorizationStatus.AUTH) {
-                hystory.push(AppRoute.SIGN_IN);
+                history.push(AppRoute.SIGN_IN);
                 return;
               }
-              const newStatus = isFavorite ? 0 : 1;
+              const newStatus = isFavorite ? REMOVE_FAVORITE_STATUS : ADD_FAVORITE_STATUS;
               onToggleFavorite(id, newStatus, cardType);
             }}
           >
@@ -96,7 +96,7 @@ function Card({card, cardType, onListItemHover}) {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`${AppRoute.ROOM_LINK}${id}`}>{name}</Link>
+          <Link to={`${AppRoute.ROOM_LINK}${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>
@@ -108,6 +108,10 @@ Card.propTypes = {
   card: OfferItem,
   cardType: PropTypes.string.isRequired,
   onListItemHover: PropTypes.func,
+};
+
+Card.defaultProps = {
+  onListItemHover: () => {},
 };
 
 export default Card;

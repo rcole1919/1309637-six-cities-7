@@ -3,14 +3,10 @@ import PropTypes from 'prop-types';
 import {SortType} from '../../const';
 
 function Sort({currentSortType, onSortTypeClick}) {
-  const [state, setState] = useState({
-    isOpened: false,
-  });
+  const [isOpened, setIsOpened] = useState(false);
 
   const closePopup = () => {
-    setState({
-      isOpened: false,
-    });
+    setIsOpened(false);
   };
 
   return (
@@ -20,9 +16,7 @@ function Sort({currentSortType, onSortTypeClick}) {
         className="places__sorting-type"
         tabIndex="0"
         onClick={() => {
-          setState({
-            isOpened: !state.isOpened,
-          });
+          setIsOpened(!isOpened);
         }}
       >
         {currentSortType}
@@ -30,7 +24,7 @@ function Sort({currentSortType, onSortTypeClick}) {
           <use xlinkHref="#icon-arrow-select"></use>
         </svg>
       </span>
-      <ul className={`places__options places__options--custom${state.isOpened ? ' places__options--opened' : ''}`}>
+      <ul className={`places__options places__options--custom${isOpened ? ' places__options--opened' : ''}`}>
         {
           Object.values(SortType).map((item) => (
             <li

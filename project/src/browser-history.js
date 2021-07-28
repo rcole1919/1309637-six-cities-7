@@ -1,5 +1,5 @@
 import {createBrowserHistory} from 'history';
 
-const browserHystory = createBrowserHistory();
+const browserHistory = createBrowserHistory();
 
-export default browserHystory;
+export default browserHistory;

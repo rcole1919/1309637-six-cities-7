@@ -18,7 +18,6 @@ function ReviewForm({id}) {
   const [state, setState] = useState({
     rating: 0,
     review: '',
-    isDisabled: false,
   });
 
   const [isBadRequest, setIsBadRequest] = useState(false);
@@ -32,10 +31,6 @@ function ReviewForm({id}) {
       ...prevState,
       [name]: value,
     }));
-    setState((prevState) => ({
-      ...prevState,
-      isDisabled: prevState.rating !== 0 && prevState.review.length >= MIN_REVIEW_LENGTH && prevState.review.length <= MAX_REVIEW_LENGTH,
-    }));
   };
 
   const clearForm = () => {
@@ -46,7 +41,6 @@ function ReviewForm({id}) {
         ...state,
         review: '',
         rating: 0,
-        isDisabled: true,
       });
       setIsBadRequest(false);
     }
@@ -99,7 +93,7 @@ function ReviewForm({id}) {
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={!state.isDisabled || !isReviewUploaded}>{isBadRequest ? 'Something wrong' : 'Submit'}</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={state.rating === 0 || state.review.length < MIN_REVIEW_LENGTH || state.review.length > MAX_REVIEW_LENGTH || !isReviewUploaded}>{isBadRequest ? 'Something wrong' : 'Submit'}</button>
       </div>
     </form>
   );

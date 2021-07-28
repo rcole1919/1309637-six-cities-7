@@ -22,14 +22,11 @@ export const main = createReducer(initialState, (builder) => {
       state.isDataLoaded = true;
     })
     .addCase(toggleFavorite, (state, action) => {
-      const index = state.offers.findIndex((el) => el.id === action.payload);
-      state.offers = [
-        ...state.offers.slice(0, index),
-        {
-          ...state.offers[index],
-          isFavorite: !state.offers[index].isFavorite,
-        },
-        ...state.offers.slice(index + 1),
-      ];
+      state.offers = state.offers.map((el) => {
+        if (el.id === action.payload) {
+          el.isFavorite = !el.isFavorite;
+        }
+        return el;
+      });
     });
 });

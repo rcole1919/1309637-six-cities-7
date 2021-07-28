@@ -10,6 +10,10 @@ export const MAX_REVIEW_LENGTH = 300;
 
 export const BACK_GET_PARAM = 'back';
 
+export const ADD_FAVORITE_STATUS = 1;
+
+export const REMOVE_FAVORITE_STATUS = 0;
+
 export const MONTHS = [
   'January',
   'February',

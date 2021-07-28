@@ -9,14 +9,14 @@ import ReviewList from '../review-list/review-list';
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
 import {getRatingPercent} from '../../utils';
-import {MapType, CardType, AuthorizationStatus, MarkerType, AppRoute, BACK_GET_PARAM} from '../../const';
+import {MapType, CardType, AuthorizationStatus, MarkerType, AppRoute, BACK_GET_PARAM, ADD_FAVORITE_STATUS, REMOVE_FAVORITE_STATUS} from '../../const';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchActiveOffer, toggleOfferStatus} from '../../store/api-actions';
 import {getAuthorizationStatus} from '../../store/user/selectors';
 import {getLoadedActiveRoomStatus, getActiveOffer, getNearbyOffers, getReviews} from '../../store/room/selectors';
 
 function Room(props) {
-  const hystory = useHistory();
+  const history = useHistory();
   const cardId = props.match.params.id;
 
   const authorizationStatus = useSelector(getAuthorizationStatus);
@@ -77,8 +77,8 @@ function Room(props) {
           <div className="property__gallery-container container">
             <div className="property__gallery">
               {
-                images.map((image, i) => (
-                  <div key={`${i + 1}`} className="property__image-wrapper">
+                images.map((image) => (
+                  <div key={image} className="property__image-wrapper">
                     <img className="property__image" src={image} alt="Studio" />
                   </div>
                 ))
@@ -102,10 +102,10 @@ function Room(props) {
                   type="button"
                   onClick={() => {
                     if (authorizationStatus !== AuthorizationStatus.AUTH) {
-                      hystory.push(`${AppRoute.SIGN_IN}?${BACK_GET_PARAM}=${cardId}`);
+                      history.push(`${AppRoute.SIGN_IN}?${BACK_GET_PARAM}=${cardId}`);
                       return;
                     }
-                    const newStatus = isFavorite ? 0 : 1;
+                    const newStatus = isFavorite ? REMOVE_FAVORITE_STATUS : ADD_FAVORITE_STATUS;
                     onToggleFavorite(Number(cardId), newStatus);
                   }}
                 >
@@ -141,8 +141,8 @@ function Room(props) {
                 <h2 className="property__inside-title">What&apos;s inside</h2>
                 <ul className="property__inside-list">
                   {
-                    goods.map((el, i) => (
-                      <li key={`${i + 1}`} className="property__inside-item">
+                    goods.map((el) => (
+                      <li key={el} className="property__inside-item">
                         {el}
                       </li>
                     ))

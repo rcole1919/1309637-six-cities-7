@@ -105,4 +105,13 @@ Map.propTypes = {
   markerType: PropTypes.string.isRequired,
 };
 
+Map.defaultProps = {
+  selectedPoint: PropTypes.shape({
+    latitude: 0,
+    longitude: 0,
+    zoom: 0,
+    name: 0,
+  }),
+};
+
 export default Map;

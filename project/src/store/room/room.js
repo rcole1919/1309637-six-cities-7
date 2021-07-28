@@ -41,17 +41,12 @@ export const room = createReducer(initialState, (builder) => {
     })
     .addCase(toggleNearbyFavorite, (state, action) => {
       if (state.nearbyOffers.length > 0) {
-        const index = state.nearbyOffers.findIndex((el) => el.id === action.payload);
-        if (index !== -1) {
-          state.nearbyOffers = [
-            ...state.nearbyOffers.slice(0, index),
-            {
-              ...state.nearbyOffers[index],
-              isFavorite: !state.nearbyOffers[index].isFavorite,
-            },
-            ...state.nearbyOffers.slice(index + 1),
-          ];
-        }
+        state.nearbyOffers = state.nearbyOffers.map((el) => {
+          if (el.id === action.payload) {
+            el.isFavorite = !el.isFavorite;
+          }
+          return el;
+        });
       }
     });
 });

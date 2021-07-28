@@ -5,14 +5,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import {login} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus, BACK_GET_PARAM} from '../../const';
 import {getAuthorizationStatus} from '../../store/user/selectors';
+import useQuery from '../../hooks/use-query';
 
 function SignIn() {
   const authorizationStatus = useSelector(getAuthorizationStatus);
 
   const dispatch = useDispatch();
-  const onSubmit = (authData, getRequest, getRoomId) => {
-    dispatch(login(authData, getRequest, getRoomId));
-  };
+  const query = useQuery();
 
   const [isValid, setIsValid] = useState(false);
   const [isBadRequest, setIsBadRequest] = useState(false);
@@ -27,21 +26,17 @@ function SignIn() {
 
   const getBadRequest = () => setIsBadRequest(true);
 
-  const getRoomIdForBack = () => {
-    const params = (new URL(document.location)).searchParams;
-    return params.get(BACK_GET_PARAM);
-  };
+  const getRoomIdForBack = () => query.get(BACK_GET_PARAM);
 
-  const handleSubmit = (evt) => {
+  const onLoginFormSubmit = (evt) => {
     evt.preventDefault();
-
-    onSubmit({
+    dispatch(login({
       login: loginRef.current.value,
       password: passwordRef.current.value,
-    }, getBadRequest, getRoomIdForBack);
+    }, getBadRequest, getRoomIdForBack));
   };
 
-  const handlePasswordChange = (evt) => {
+  const onPasswordChange = (evt) => {
     const {value} = evt.target;
     value.trim().length > 0 ? setIsValid(true) : setIsValid(false);
   };
@@ -53,7 +48,7 @@ function SignIn() {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form onSubmit={handleSubmit} className="login__form form">
+            <form onSubmit={onLoginFormSubmit} className="login__form form">
               <div className="login__input-wrapper form__input-wrapper">
                 <label htmlFor="login" className="visually-hidden">E-mail</label>
                 <input
@@ -76,7 +71,7 @@ function SignIn() {
                   name="password"
                   placeholder="Password"
                   required
-                  onChange={handlePasswordChange}
+                  onChange={onPasswordChange}
                 />
               </div>
               <button disabled={!isValid} className="login__submit form__submit button" type="submit">{isBadRequest ? 'Enter correct data' : 'Sign in'}</button>
